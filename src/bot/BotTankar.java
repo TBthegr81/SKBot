@@ -7,51 +7,55 @@ public class BotTankar {
 	private static boolean topicGeneration = false;
 	private static boolean addLink = false;
 	private static boolean spotify = false;
+	private static char Char = '!';
 	public static void evaluate(String input)
 	{
-		char Char = '!';
 		// Start by splitting the input string by whitespaces
 		String[] Input = input.split("\\s+");
 		
 		// Basic stuff
-		if(Input[0].equals("PING"))
+		if(Input[0].equalsIgnoreCase("PING"))
 		{
 			SKICKATILLBAKA("PONG");
 		}
 		
 		// Commands for user to use
-		else if(Input[0].equals(Char + "Bored"))
+		else if(Input[0].equalsIgnoreCase(Char + "Bored"))
 		{
-			Bored(Input);
+			bored(Input);
 		}
-		else if(Input[0].equals(Char + "Spotify"))
+		else if(Input[0].equalsIgnoreCase(Char + "Spotify"))
 		{
-			Spotify(Input);
+			spotify(Input);
 		}
-		else if(Input[0].equals(Char + "Topicgenerator"))
+		else if(Input[0].equalsIgnoreCase(Char + "Topicgenerator"))
 		{
-			TopicGen(Input);
+			topicGen(Input);
 		}
 		else if(Input[0].contains("Day") && Input[1].contains("changed"))
 		{
-			GenerateTopic();
+			generateTopic();
 		}
 		
-		else if(Input[0].equals(Char + "Coin"))
+		else if(Input[0].equalsIgnoreCase(Char + "Coin"))
 		{
-			Coin();
+			coin();
 		}
-		else if(Input[0].equals(Char + "Dice"))
+		else if(Input[0].equalsIgnoreCase(Char + "Dice"))
 		{
-			Dice();
+			dice();
 		}
-		else if(Input[0].equals(Char + "Login"))
+		else if(Input[0].equalsIgnoreCase(Char + "Login"))
 		{
-			Login(Input);
+			login(Input);
 		}
-		else if(Input[0].equals(Char + "Logout"))
+		else if(Input[0].equalsIgnoreCase(Char + "Logout"))
 		{
-			Logout(Input);
+			logout(Input);
+		}
+		else if(Input[0].equalsIgnoreCase(Char + "Help"))
+		{
+			help(Input);
 		}
 		
 		//Special
@@ -98,7 +102,7 @@ public class BotTankar {
 		System.out.println(text);
 	}
 	
-	public static void Bored(String[] Input)
+	public static void bored(String[] Input)
 	{
 		String tag = "";
 		if(Input.length > 1)
@@ -120,7 +124,7 @@ public class BotTankar {
 		}
 	}
 	
-	public static void Spotify(String[] Input)
+	public static void spotify(String[] Input)
 	{
 		String tag = "";
 		if(Input.length > 1)
@@ -141,20 +145,20 @@ public class BotTankar {
 		}
 	}
 	
-	public static void TopicGen(String[] Input)
+	public static void topicGen(String[] Input)
 	{
-		if(Input[1].equals("on"))
+		if(Input[1].equalsIgnoreCase("on"))
 		{
 			//Sätt på skiten
 			topicGeneration = true;
 		}
-		else if(Input[1].equals("off"))
+		else if(Input[1].equalsIgnoreCase("off"))
 		{
 			topicGeneration = false;
 		}
 	}
 	
-	public static void GenerateTopic()
+	public static void generateTopic()
 	{
 		//Day changed to 06 May 2013
 		if(topicGeneration)
@@ -169,7 +173,7 @@ public class BotTankar {
 		}
 	}
 	
-	public static void Coin()
+	public static void coin()
 	{
 		int random = new Random().nextInt(2);
 		if(random == 1)
@@ -182,13 +186,13 @@ public class BotTankar {
 		}
 	}
 	
-	public static void Dice()
+	public static void dice()
 	{
 		int random = new Random().nextInt(6);
 		SKICKATILLBAKA("Dice says " + (random+1));
 	}
 	
-	public static void Login(String[] Input)
+	public static void login(String[] Input)
 	{
 		@SuppressWarnings("unused")
 		String username = Input[1];
@@ -198,8 +202,39 @@ public class BotTankar {
 		//Lib.login(username, password);
 	}
 	
-	public static void Logout(String[] Input)
+	public static void logout(String[] Input)
 	{
 		//Lib.logout(username, password);
+	}
+	
+	public static void help(String[] Input)
+	{
+		if(Input.length > 1)
+		{
+			if(Input[1].equalsIgnoreCase("bored") || Input[1].equalsIgnoreCase(Char+"bored"))
+			{
+				SKICKATILLBAKA(Char+"Bored [tag] gets and posts a random link from the database of previously posted and tagged links."); 
+				SKICKATILLBAKA("If no tag is givven a totaly random link is taken. VARNING, May contain NSFW links.");
+			}
+			else if(Input[1].equalsIgnoreCase("spotify") || Input[1].equalsIgnoreCase(Char+"spotify"))
+			{
+				SKICKATILLBAKA(Char+"Spotify [tag] gets and posts a random link to a song/album on Spotify from the database of previously posted and tagged links.");
+				SKICKATILLBAKA("If no tag is givven, a totaly random link is taken.");
+			}
+			else if(Input[1].equalsIgnoreCase("coin") || Input[1].equalsIgnoreCase(Char+"coin"))
+			{
+				SKICKATILLBAKA(Char+"Coin flips a virtual coin and returns if it was heads or tails");
+			}
+			else if(Input[1].equalsIgnoreCase("dice") || Input[1].equalsIgnoreCase(Char+"dice"))
+			{
+				SKICKATILLBAKA(Char+"Dice rolls a virtual 6-sided dice and returns the result");
+			}
+		}
+		else
+		{
+			SKICKATILLBAKA("This is the Snekabel Bot. I can help with a few things in the chat, here is a list of what i can do.");
+			SKICKATILLBAKA(Char+"Bored [tag], "+Char+"Spotify [tag], "+Char+"Coin, "+Char+"Dice");
+			SKICKATILLBAKA("Write "+Char+"Help [command] to get detailed descriptions about the use of the commands");
+		}
 	}
 }
