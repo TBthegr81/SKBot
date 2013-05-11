@@ -121,10 +121,11 @@ public class CLib {
 		}
 		
 		// Funktion liknande den andra choice, men med skillnaden att denna alltid ger Yes/No som alternativ.
-		public static int choiceyn(String question, int rightAnswer)
+		public static boolean choiceyn(String question)
 		{
 			Scanner sc = new Scanner(System.in);
-			int answer = 0;
+			int rightAnswer = 0;
+			boolean answer = false;
 			writed(question);
 			boolean notfail = true;
 			
@@ -138,13 +139,13 @@ public class CLib {
 				// kollar om man har skrivit yes eller åtmindstånde y, isåfall är svaret 1
 				if(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("y"))
 				{
-					answer = 1;
+					answer = true;
 					break;
 				}
 				// Skriver man no eller n blir svaret 0
 				else if(choice.equalsIgnoreCase("no") || choice.equalsIgnoreCase("n"))
 				{
-					answer = 0;
+					answer = false;
 					break;
 				}
 				// Skriver man något annat än yes,y,no,n så får man skriva om

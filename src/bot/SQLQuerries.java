@@ -29,7 +29,7 @@ public class SQLQuerries {
 		
 		try {
 			con = ds.getConnection();
-			System.out.println("Connected to MySQL Server");
+			//System.out.println("Connected to MySQL Server");
 		} catch (SQLException e) {
 			System.out.println("Cant connect to DB! " + e.getLocalizedMessage());
 			return false;
@@ -365,6 +365,42 @@ public class SQLQuerries {
 			closeDB();
 		}
 	}
+	public static void delLink(String[] Input) throws SQLFuckupExeption
+	{
+		connectToDB();
+		try {
+			statement = con.createStatement();
+		} catch (SQLException e) {
+			System.out.println("Could not Querry! " + e.getLocalizedMessage());
+		}
+		
+		try {
+			con.setAutoCommit(false);
+			int linkid = 0;
+			if(Lib.isNumeric(Input[1]))		
+			{
+				linkid = Integer.parseInt(Input[1]);
+				statement.execute("DELETE FROM Link WHERE Link_ID = "+linkid);
+			}
+			else
+			{
+				statement.execute("SELECT @A:=Link_ID FROM Link WHERE Link = \'" + Input[1] + "'");
+				statement.execute("DELETE FROM Link WHERE Link_ID = @A");
+			}
+			
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Could not Rollback" + e1.getLocalizedMessage());
+			}
+			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+		} finally {
+			closeDB();
+		}
+	}
+	
 	/* Inte speciellt viktiga nu
 	public static void addEmail(String Email) throws SQLFuckupExeption
 	{
@@ -383,7 +419,7 @@ public class SQLQuerries {
 	
 	public static String getRandomNumber() throws SQLFuckupExeption
 	{
-		return new String();oikli
+		return new String();
 	}
 	*/
 }
