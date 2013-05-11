@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 public class SQLQuerries {
@@ -15,12 +14,14 @@ public class SQLQuerries {
 	private static MysqlDataSource ds = new MysqlDataSource();
 	private static Connection con = null;
 	private static Statement statement;
+	private static int sqlport = 3306;
+
 	
 	public static boolean connectToDB()
 	{
 		
 		ds.setServerName("127.0.0.1");
-		ds.setPort(3307);
+		ds.setPort(sqlport);
 		ds.setUser("ircBot");
 		ds.setPassword("morn");
 		ds.setDatabaseName("Bot");
@@ -28,6 +29,7 @@ public class SQLQuerries {
 		
 		try {
 			con = ds.getConnection();
+			System.out.println("Connected to MySQL Server");
 		} catch (SQLException e) {
 			System.out.println("Cant connect to DB! " + e.getLocalizedMessage());
 			return false;
@@ -54,6 +56,12 @@ public class SQLQuerries {
         	return false;
         }
 		return true;
+	}
+	
+	public static void setPort(int port)
+	{
+		if(port != 0)
+		sqlport = port;
 	}
 	
 	public static void addLink(String link, int type, ArrayList<String> Tags) throws SQLFuckupExeption
