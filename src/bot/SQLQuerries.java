@@ -401,6 +401,110 @@ public class SQLQuerries {
 		}
 	}
 	
+	public static String linkInfo(String[] Input) throws SQLFuckupExeption
+	{
+		String link = Input[1];
+		//ArrayList<String> Tags = new ArrayList<String>();
+		String info = null;
+		//System.out.println("starting");
+		connectToDB();
+			try {
+				//System.out.println(Input[1]);
+				if(Lib.isNumeric(Input[1]))
+				{
+					pst = con.prepareStatement("SELECT " +
+							"Link_ID, Link " +
+							"Link " +
+							"FROM Link " +
+							"WHERE Link_ID = 5");
+				}
+				else
+				{
+					pst = con.prepareStatement("SELECT " +
+							"Link_ID, Link " +
+							"Link " +
+							"FROM Link " +
+							"WHERE Link = '"+ link +"'");
+				}
+			} catch (SQLException e) {
+				System.out.println("Could not Querry! " + e.getLocalizedMessage());
+			}
+			try {
+				rs = pst.executeQuery();
+				while (rs.next())
+				{
+					info = rs.getString(1) + " " + rs.getString(2);
+					//System.out.println("INFO1:" + info);
+		        }
+	        	
+			} catch (SQLException e) {
+				System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+			}
+			try {
+				pst = con.prepareStatement("SELECT " +
+						"Tag.name " +
+						"FROM Link " +
+						"JOIN LinkTag ON Link.Link_ID=LinkTag.Link_ID " +
+						"JOIN Tag ON LinkTag.Tag_ID=Tag.Tag_ID " +
+						"WHERE Link.Link = '" + link+ "'");
+			} catch (SQLException e) {
+				System.out.println("Could not Querry! " + e.getLocalizedMessage());
+			}
+			try {
+				//System.out.println("Got tags");
+				rs = pst.executeQuery();
+				while (rs.next())
+				{
+					info = info + " " + rs.getString(1) + ",";
+		        }
+	        	
+			} catch (SQLException e) {
+				System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+			}
+			
+			finally {
+				closeDB();
+				//System.out.println("Closing");
+			}
+		return info;
+	}
+	
+	public static void addFeed(String[] Input) throws SQLFuckupExeption
+	{
+		connectToDB();
+		try {
+			statement = con.createStatement();
+		} catch (SQLException e) {
+			System.out.println("Could not Querry! " + e.getLocalizedMessage());
+		}
+		
+		try {
+			con.setAutoCommit(false);
+			int linkid = 0;
+			if(Lib.isNumeric(Input[1]))		
+			{
+				linkid = Integer.parseInt(Input[1]);
+				statement.execute("DELETE FROM Link WHERE Link_ID = "+linkid);
+			}
+			else
+			{
+				statement.execute("SELECT @A:=Link_ID FROM Link WHERE Link = \'" + Input[1] + "'");
+				statement.execute("DELETE FROM Link WHERE Link_ID = @A");
+			}
+			
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Could not Rollback" + e1.getLocalizedMessage());
+			}
+			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+		} finally {
+			closeDB();
+		}
+	}
+	
 	/* Inte speciellt viktiga nu
 	public static void addEmail(String Email) throws SQLFuckupExeption
 	{

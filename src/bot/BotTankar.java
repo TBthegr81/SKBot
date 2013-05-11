@@ -80,6 +80,10 @@ public class BotTankar {
 			{
 				disableLink(Input);
 			}
+			else if(Input[0].equalsIgnoreCase(Char + "LinkInfo"))
+			{
+				linkInfo(Input);
+			}
 		}
 		
 		//Special
@@ -292,6 +296,15 @@ public class BotTankar {
 			disabledCommands.add(Input[1].toUpperCase());
 		}
 		SKICKATILLBAKA(Input[1] + " is now disabled");
+	}
+	
+	public static void linkInfo(String[] Input)
+	{
+		try {
+			SKICKATILLBAKA(SQLQuerries.linkInfo(Input));
+		} catch (SQLFuckupExeption e) {
+			CLib.print("Cant delete Link! " + e.getLocalizedMessage());
+		}
 	}
 	
 	
