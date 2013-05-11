@@ -1,5 +1,11 @@
 package bot;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -8,54 +14,76 @@ public class BotTankar {
 	private static boolean addLink = false;
 	private static boolean spotify = false;
 	private static char Char = '!';
+	private static ArrayList<String> disabledCommands= new ArrayList<String>();
+	private static ArrayList<String> ignoredUsers= new ArrayList<String>();
+	
 	public static void evaluate(String input)
 	{
+		/*for(int i = 0; i < disabledCommands.size(); i++)
+		{
+			System.out.println(disabledCommands.get(i));
+		}*/
+		
 		// Start by splitting the input string by whitespaces
 		String[] Input = input.split("\\s+");
 		
-		// Basic stuff
-		if(Input[0].equalsIgnoreCase("PING"))
-		{
-			SKICKATILLBAKA("PONG");
-		}
 		
 		// Commands for user to use
-		else if(Input[0].equalsIgnoreCase(Char + "Bored"))
+		if(!disabledCommands.contains(Input[0].toUpperCase()))
 		{
-			bored(Input);
-		}
-		else if(Input[0].equalsIgnoreCase(Char + "Spotify"))
-		{
-			spotify(Input);
-		}
-		else if(Input[0].equalsIgnoreCase(Char + "Topicgenerator"))
-		{
-			topicGen(Input);
-		}
-		else if(Input[0].contains("Day") && Input[1].contains("changed"))
-		{
-			generateTopic();
-		}
-		
-		else if(Input[0].equalsIgnoreCase(Char + "Coin"))
-		{
-			coin();
-		}
-		else if(Input[0].equalsIgnoreCase(Char + "Dice"))
-		{
-			dice();
-		}
-		else if(Input[0].equalsIgnoreCase(Char + "Login"))
-		{
-			login(Input);
-		}
-		else if(Input[0].equalsIgnoreCase(Char + "Logout"))
-		{
-			logout(Input);
-		}
-		else if(Input[0].equalsIgnoreCase(Char + "Help"))
-		{
-			help(Input);
+			if(Input[0].equalsIgnoreCase(Char + "Bored"))
+			{
+				bored(Input);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Spotify"))
+			{
+				spotify(Input);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Topicgenerator"))
+			{
+				topicGen(Input);
+			}
+			else if(Input[0].contains("Day") && Input[1].contains("changed"))
+			{
+				generateTopic();
+			}
+			
+			else if(Input[0].equalsIgnoreCase(Char + "Coin"))
+			{
+				coin();
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Dice"))
+			{
+				dice();
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Login"))
+			{
+				login(Input);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Logout"))
+			{
+				logout(Input);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Help"))
+			{
+				help(Input);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "DelLink"))
+			{
+				delLink(Input);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Proxxi"))
+			{
+				proxxi();
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Disable"))
+			{
+				disableLink(Input);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "LinkInfo"))
+			{
+				linkInfo(Input);
+			}
 		}
 		
 		//Special
@@ -75,13 +103,17 @@ public class BotTankar {
 					}
 					url = Input[i];
 					addLink = true;
+					if(!disabledCommands.contains("readlink"));
+					{
+						SKICKATILLBAKA(getHtmlTag("title", getHtmlCode(Input[i])));
+					}
 				}
 				else if(Input[i].contains("#"))
 				{
 					tags.add(Input[i]+"");
 				}
 			}
-			if(addLink)
+			if(addLink && !disabledCommands.contains("addlink"))
 			{
 				int type = 2;
 				if(spotify)
@@ -236,5 +268,92 @@ public class BotTankar {
 			SKICKATILLBAKA(Char+"Bored [tag], "+Char+"Spotify [tag], "+Char+"Coin, "+Char+"Dice");
 			SKICKATILLBAKA("Write "+Char+"Help [command] to get detailed descriptions about the use of the commands");
 		}
+	}
+	
+	public static void delLink(String[] Input)
+	{
+		try {
+			SQLQuerries.delLink(Input);
+		} catch (SQLFuckupExeption e) {
+			CLib.print("Cant delete Link! " + e.getLocalizedMessage());
+		}
+	}
+	
+	public static void proxxi()
+	{
+		String status = "stängt";
+		if(true)
+		{
+			status = "öppet";
+		}
+		SKICKATILLBAKA("Proxxi är " + status);
+	}
+	
+	public static void disableLink(String[] Input)
+	{
+		if(Input.length > 1)
+		{
+			disabledCommands.add(Input[1].toUpperCase());
+		}
+		SKICKATILLBAKA(Input[1] + " is now disabled");
+	}
+	
+	public static void linkInfo(String[] Input)
+	{
+		try {
+			SKICKATILLBAKA(SQLQuerries.linkInfo(Input));
+		} catch (SQLFuckupExeption e) {
+			CLib.print("Cant delete Link! " + e.getLocalizedMessage());
+		}
+	}
+	
+	
+	/*
+	 *  DOSn3rds old TheGuardian Code
+	 *  Use with caution
+	 */
+	private static String getHtmlCode(String link) {
+		URL url;
+		StringBuilder builder;
+		String htmlCode = "";
+
+		try {
+			url = new URL(link);
+			URLConnection conn = url.openConnection();
+			conn.setConnectTimeout(10000);
+			conn.setReadTimeout(10000);
+			InputStreamReader inputStream = new InputStreamReader(conn.getInputStream());
+			BufferedReader reader = new BufferedReader(inputStream);
+			builder = new StringBuilder();
+			htmlCode = "";
+			String line;
+
+			while ((line = reader.readLine()) != null) {
+				builder.append(line+" ");
+			}
+			reader.close();
+
+			htmlCode = builder.toString();
+		} catch (MalformedURLException e) {
+			System.out.println(link+" is a bad url link");
+			return "";
+		} catch (IllegalArgumentException e) {
+			System.out.println(link+" is a bad url link");
+			return "";
+		} catch (IOException e) {
+			System.out.println("Could not open link: "+link);
+			return "";
+		}
+
+		return htmlCode;
+
+	}
+	private static String getHtmlTag(String tag, String source) {
+		tag = tag.toLowerCase().trim();
+		String tagContent = "";
+		if(source.toLowerCase().contains("<"+tag.toLowerCase()+">")){
+			tagContent += source.substring(source.toLowerCase().indexOf(tag+">")+tag.length()+1, source.toLowerCase().indexOf("</"+tag+">"));
+		}
+		return tagContent.replace("\n", "").replace("\t","").replace("  ", "");
 	}
 }
