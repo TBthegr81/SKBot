@@ -12,10 +12,10 @@
  * Kontakt: Erik.Welander@hotmail.com
  */
 package bot;
-
+ 
 import java.io.IOException;
 import java.net.UnknownHostException;
-
+ 
 public class IRCProtocol extends TCPSocket{
     public String nick = "", user = "", channel = "";
     public IRCProtocol(String host, int port, String nick, String user, String channel) throws UnknownHostException, IOException{
@@ -27,10 +27,12 @@ public class IRCProtocol extends TCPSocket{
     public void disconnect() throws IOException{
         super.disconnectFromHost();
     }
+    public String[] getChannelDataArray() throws IOException{
+       return getData().split("\\s+",4);
+    }
     @Override
     public String getData() throws IOException{
-        String data = "";
-        data = super.getData();
+        String data = super.getData();
         if(data.startsWith("PING")){
             data = data.replace("PING", "PONG");
             sendDataRaw(data);
@@ -48,8 +50,8 @@ public class IRCProtocol extends TCPSocket{
         super.sendData(toSend);
         System.out.println("IRCProtocol: Sent message to channel: "+toSend);
     }
-    
-    
+   
+   
     public void joinNetwork() throws IOException, InterruptedException{
         System.out.println("Attempting to send user info to IRC network...");
         sendDataRaw("NICK "+nick+"\r\n");
@@ -61,5 +63,6 @@ public class IRCProtocol extends TCPSocket{
         getData();
         getData();
         sendDataRaw("JOIN "+channel+"\r\n");
+        getData();
     }
 }

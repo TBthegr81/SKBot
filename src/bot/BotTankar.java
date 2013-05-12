@@ -17,7 +17,7 @@ public class BotTankar {
 	private static ArrayList<String> disabledCommands= new ArrayList<String>();
 	private static ArrayList<String> ignoredUsers= new ArrayList<String>();
 	
-	public static void evaluate(String input)
+	public static void evaluate(IRCProtocol p, String input)
 	{
 		/*for(int i = 0; i < disabledCommands.size(); i++)
 		{
@@ -33,63 +33,64 @@ public class BotTankar {
 		{
 			if(Input[0].equalsIgnoreCase(Char + "Bored"))
 			{
-				bored(Input);
+				bored(p,Input);
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "Spotify"))
 			{
-				spotify(Input);
+				spotify(p,Input);
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "Topicgenerator"))
 			{
-				topicGen(Input);
+				topicGen(p,Input);
 			}
 			else if(Input[0].contains("Day") && Input[1].contains("changed"))
 			{
-				generateTopic();
+				generateTopic(p);
 			}
 			
 			else if(Input[0].equalsIgnoreCase(Char + "Coin"))
 			{
-				coin();
+				coin(p);
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "Dice"))
 			{
-				dice();
+				dice(p);
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "Login"))
 			{
-				login(Input);
+				login(p,Input);
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "Logout"))
 			{
-				logout(Input);
+				logout(p,Input);
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "Help"))
 			{
-				help(Input);
+				help(p,Input);
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "DelLink"))
 			{
-				delLink(Input);
+				delLink(p,Input);
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "Proxxi"))
 			{
-				proxxi();
+				proxxi(p);
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "Disable"))
 			{
-				disableLink(Input);
+				disableLink(p,Input);
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "LinkInfo"))
 			{
-				linkInfo(Input);
+				linkInfo(p,Input);
 			}
-		}
 		
 		//Special
 		//Looking thru  all the words in a post
 		else
 		{	
+			addLink = false;
+			//System.out.println("Now we are at ELSE");
 			ArrayList<String> tags = new ArrayList<String>();
 			String url = "";
 			for(int i = 0; i < Input.length; i++)
@@ -97,6 +98,7 @@ public class BotTankar {
 				//And here you can look for specefic words! :D
 				if(Input[i].contains("http://") || Input[i].contains("https://"))
 				{
+					System.out.println("Found link!");
 					if(Input[i].contains("open.spotify.com"))
 					{
 						spotify = true;
@@ -105,7 +107,11 @@ public class BotTankar {
 					addLink = true;
 					if(!disabledCommands.contains("readlink"));
 					{
-						SKICKATILLBAKA(getHtmlTag("title", getHtmlCode(Input[i])));
+						try {
+							p.sendDataToChannel(getHtmlTag("title", getHtmlCode(Input[i])));
+						} catch (IOException e) {
+							System.out.println("Cant send data" + e.getLocalizedMessage());
+						}
 					}
 				}
 				else if(Input[i].contains("#"))
@@ -115,6 +121,7 @@ public class BotTankar {
 			}
 			if(addLink && !disabledCommands.contains("addlink"))
 			{
+				//System.out.println("Adding link");
 				int type = 2;
 				if(spotify)
 				{
@@ -122,19 +129,20 @@ public class BotTankar {
 				}
 				try {
 					SQLQuerries.addLink(url, type, tags);
+					try {
+						p.sendDataToChannel("Adding Link: " + url);
+					} catch (IOException e1) {
+						System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+					}
 				} catch (SQLFuckupExeption e) {
 					CLib.print("Cant add new link! " + e.getLocalizedMessage());
 				}
 			}
 		}
+		}
 	}
 	
-	public static void SKICKATILLBAKA(String text)
-	{
-		System.out.println(text);
-	}
-	
-	public static void bored(String[] Input)
+	public static void bored(IRCProtocol p,String[] Input)
 	{
 		String tag = "";
 		if(Input.length > 1)
@@ -145,18 +153,28 @@ public class BotTankar {
 		try {
 			String svar = SQLQuerries.getRandomLink(tag, 2);
 			if(svar != null)
-			SKICKATILLBAKA(svar);
+			p.sendDataToChannel(svar);
 			else
 			{
-				SKICKATILLBAKA("No link found");
+				try {
+					p.sendDataToChannel("No link found");
+				} catch (IOException e) {
+					System.out.println("Could not send data to server " + e.getLocalizedMessage());
+				}
 			}
 		} catch (SQLFuckupExeption e) {
 			CLib.print("Cant get Random Link!" + e.getLocalizedMessage());
-			SKICKATILLBAKA("Cant get Link!");
+			try {
+				p.sendDataToChannel("Cant get Link!");
+			} catch (IOException e1) {
+				System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+			}
+		} catch (IOException e) {
+			System.out.println("Could not send data to server " + e.getLocalizedMessage());
 		}
 	}
 	
-	public static void spotify(String[] Input)
+	public static void spotify(IRCProtocol p,String[] Input)
 	{
 		String tag = "";
 		if(Input.length > 1)
@@ -167,17 +185,25 @@ public class BotTankar {
 		try {
 			String svar = SQLQuerries.getRandomLink(tag, 1);
 			if(svar != null)
-			SKICKATILLBAKA(svar);
+				try {
+					p.sendDataToChannel(svar);
+				} catch (IOException e1) {
+					System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+				}
 			else
 			{
-				SKICKATILLBAKA("No link found");
+				try {
+					p.sendDataToChannel("No link found");
+				} catch (IOException e1) {
+					System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+				}
 			}
 		} catch (SQLFuckupExeption e) {
 			CLib.print("Cant get Random Spotify! " + e.getLocalizedMessage());
 		}
 	}
 	
-	public static void topicGen(String[] Input)
+	public static void topicGen(IRCProtocol p,String[] Input)
 	{
 		if(Input[1].equalsIgnoreCase("on"))
 		{
@@ -190,13 +216,17 @@ public class BotTankar {
 		}
 	}
 	
-	public static void generateTopic()
+	public static void generateTopic(IRCProtocol p)
 	{
 		//Day changed to 06 May 2013
 		if(topicGeneration)
 		{
 			String topic = "troffelma0 - Snekabel Edition";
-			SKICKATILLBAKA("/topic #Snekabel " + topic);
+			try {
+				p.sendDataToChannel("/topic #Snekabel " + topic);
+			} catch (IOException e1) {
+				System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+			}
 			try {
 				SQLQuerries.addRoomTopicHistory("oftc.net", "#Snekabel", topic);
 			} catch (SQLFuckupExeption e) {
@@ -205,26 +235,38 @@ public class BotTankar {
 		}
 	}
 	
-	public static void coin()
+	public static void coin(IRCProtocol p)
 	{
 		int random = new Random().nextInt(2);
 		if(random == 1)
 		{
-			SKICKATILLBAKA("Coin Toss says Heads");
+			try {
+				p.sendDataToChannel("Coin Toss says Heads");
+			} catch (IOException e1) {
+				System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+			}
 		}
 		else
 		{
-			SKICKATILLBAKA("Coin Toss says Tails");
+			try {
+				p.sendDataToChannel("Coin Toss says Tails");
+			} catch (IOException e1) {
+				System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+			}
 		}
 	}
 	
-	public static void dice()
+	public static void dice(IRCProtocol p)
 	{
 		int random = new Random().nextInt(6);
-		SKICKATILLBAKA("Dice says " + (random+1));
+		try {
+			p.sendDataToChannel("Dice says " + (random+1));
+		} catch (IOException e1) {
+			System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+		}
 	}
 	
-	public static void login(String[] Input)
+	public static void login(IRCProtocol p,String[] Input)
 	{
 		@SuppressWarnings("unused")
 		String username = Input[1];
@@ -234,43 +276,48 @@ public class BotTankar {
 		//Lib.login(username, password);
 	}
 	
-	public static void logout(String[] Input)
+	public static void logout(IRCProtocol p,String[] Input)
 	{
 		//Lib.logout(username, password);
 	}
 	
-	public static void help(String[] Input)
+	public static void help(IRCProtocol p,String[] Input)
 	{
-		if(Input.length > 1)
-		{
-			if(Input[1].equalsIgnoreCase("bored") || Input[1].equalsIgnoreCase(Char+"bored"))
+		try {
+			if(Input.length > 1)
 			{
-				SKICKATILLBAKA(Char+"Bored [tag] gets and posts a random link from the database of previously posted and tagged links."); 
-				SKICKATILLBAKA("If no tag is givven a totaly random link is taken. VARNING, May contain NSFW links.");
+				if(Input[1].equalsIgnoreCase("bored") || Input[1].equalsIgnoreCase(Char+"bored"))
+				{
+					
+					p.sendDataToChannel(Char+"Bored [tag] gets and posts a random link from the database of previously posted and tagged links.");
+					p.sendDataToChannel("If no tag is givven a totaly random link is taken. VARNING, May contain NSFW links.");
+				}
+				else if(Input[1].equalsIgnoreCase("spotify") || Input[1].equalsIgnoreCase(Char+"spotify"))
+				{
+					p.sendDataToChannel(Char+"Spotify [tag] gets and posts a random link to a song/album on Spotify from the database of previously posted and tagged links.");
+					p.sendDataToChannel("If no tag is givven, a totaly random link is taken.");
+				}
+				else if(Input[1].equalsIgnoreCase("coin") || Input[1].equalsIgnoreCase(Char+"coin"))
+				{
+					p.sendDataToChannel(Char+"Coin flips a virtual coin and returns if it was heads or tails");
+				}
+				else if(Input[1].equalsIgnoreCase("dice") || Input[1].equalsIgnoreCase(Char+"dice"))
+				{
+					p.sendDataToChannel(Char+"Dice rolls a virtual 6-sided dice and returns the result");
+				}
 			}
-			else if(Input[1].equalsIgnoreCase("spotify") || Input[1].equalsIgnoreCase(Char+"spotify"))
+			else
 			{
-				SKICKATILLBAKA(Char+"Spotify [tag] gets and posts a random link to a song/album on Spotify from the database of previously posted and tagged links.");
-				SKICKATILLBAKA("If no tag is givven, a totaly random link is taken.");
+				p.sendDataToChannel("This is the Snekabel Bot. I can help with a few things in the chat, here is a list of what i can do.");
+				p.sendDataToChannel(Char+"Bored [tag], "+Char+"Spotify [tag], "+Char+"Coin, "+Char+"Dice");
+				p.sendDataToChannel("Write "+Char+"Help [command] to get detailed descriptions about the use of the commands");
 			}
-			else if(Input[1].equalsIgnoreCase("coin") || Input[1].equalsIgnoreCase(Char+"coin"))
-			{
-				SKICKATILLBAKA(Char+"Coin flips a virtual coin and returns if it was heads or tails");
-			}
-			else if(Input[1].equalsIgnoreCase("dice") || Input[1].equalsIgnoreCase(Char+"dice"))
-			{
-				SKICKATILLBAKA(Char+"Dice rolls a virtual 6-sided dice and returns the result");
-			}
-		}
-		else
-		{
-			SKICKATILLBAKA("This is the Snekabel Bot. I can help with a few things in the chat, here is a list of what i can do.");
-			SKICKATILLBAKA(Char+"Bored [tag], "+Char+"Spotify [tag], "+Char+"Coin, "+Char+"Dice");
-			SKICKATILLBAKA("Write "+Char+"Help [command] to get detailed descriptions about the use of the commands");
+		} catch (IOException e1) {
+			System.out.println("Could not send data to server " + e1.getLocalizedMessage());
 		}
 	}
 	
-	public static void delLink(String[] Input)
+	public static void delLink(IRCProtocol p,String[] Input)
 	{
 		try {
 			SQLQuerries.delLink(Input);
@@ -279,29 +326,41 @@ public class BotTankar {
 		}
 	}
 	
-	public static void proxxi()
+	public static void proxxi(IRCProtocol p)
 	{
 		String status = "stängt";
 		if(true)
 		{
 			status = "öppet";
 		}
-		SKICKATILLBAKA("Proxxi är " + status);
+		try {
+			p.sendDataToChannel("Proxxi är " + status);
+		} catch (IOException e1) {
+			System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+		}
 	}
 	
-	public static void disableLink(String[] Input)
+	public static void disableLink(IRCProtocol p,String[] Input)
 	{
 		if(Input.length > 1)
 		{
 			disabledCommands.add(Input[1].toUpperCase());
 		}
-		SKICKATILLBAKA(Input[1] + " is now disabled");
+		try {
+			p.sendDataToChannel(Input[1] + " is now disabled");
+		} catch (IOException e1) {
+			System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+		}
 	}
 	
-	public static void linkInfo(String[] Input)
+	public static void linkInfo(IRCProtocol p,String[] Input)
 	{
 		try {
-			SKICKATILLBAKA(SQLQuerries.linkInfo(Input));
+			try {
+				p.sendDataToChannel(SQLQuerries.linkInfo(Input));
+			} catch (IOException e1) {
+				System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+			}
 		} catch (SQLFuckupExeption e) {
 			CLib.print("Cant delete Link! " + e.getLocalizedMessage());
 		}
