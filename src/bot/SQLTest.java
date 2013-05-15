@@ -1,11 +1,16 @@
 package bot;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SQLTest {
 
 	public static void main(String[] args) {
 		CLib.print("Starting tests");
+		boolean svar = CLib.choiceyn("Dont use port 3306?");
+		if(svar == false)
+		SQLQuerries.setPort(Integer.parseInt(CLib.input("Port:")));
+		/*
 		//Try to add links with tags
 		try {
 			ArrayList<String> tags = new ArrayList<String>();
@@ -90,7 +95,27 @@ public class SQLTest {
 			SQLQuerries.deleteUser(1);
 		} catch (SQLFuckupExeption e) {
 			CLib.print("SQLFuckup! " + e);
+		}*/
+		
+		//Try go get TopTags
+		ArrayList<String> tagCount = null;
+		try {
+			tagCount = SQLQuerries.tagCount();
+		} catch (SQLFuckupExeption e) {
+			CLib.print("Cant get TopTags! " + e.getLocalizedMessage());
 		}
+		for(int i = 0; i < tagCount.size(); i++)
+		{
+				System.out.println("Tag #"+i+" "+tagCount.get(i));
+		}
+		
+		//Try to delete latest link
+		/*try {
+			SQLQuerries.delLink(new String[0]);
+		} catch (SQLFuckupExeption e) {
+			CLib.print("SQLFuckup! " + e);
+		}*/
+		
 		CLib.print("Test ended");
 	}
 

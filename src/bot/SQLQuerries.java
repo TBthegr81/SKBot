@@ -108,6 +108,15 @@ public class SQLQuerries {
 		String Link = null;
 		connectToDB();
 		try {
+			String typeC = "";
+			if(type == 1)
+			{
+				typeC = "<> 2";
+			}
+			else
+			{
+				typeC = "= " + type;
+			}
 			if(Tag != "")
 			{
 				pst = con.prepareStatement("SELECT Link " +
@@ -115,7 +124,7 @@ public class SQLQuerries {
 						"JOIN LinkTag on Link.Link_ID=LinkTag.Link_ID " +
 						"JOIN Tag ON LinkTag.Tag_ID=Tag.Tag_ID " +
 						"WHERE UPPER(Tag.Name) = UPPER('"+ Tag +"') "+
-						"AND Type =" + type + " " +
+						"AND Type " + typeC + " " +
 						"ORDER BY RAND() " +
 						"LIMIT 1");
 			}
@@ -123,7 +132,7 @@ public class SQLQuerries {
 			{
 				pst = con.prepareStatement("SELECT Link " +
 						"FROM Link " +
-						"WHERE Type =" + type + " " +
+						"WHERE Type " + typeC + " " +
 						"ORDER BY RAND() " +
 						"LIMIT 1");
 			}
@@ -380,15 +389,26 @@ public class SQLQuerries {
 		try {
 			con.setAutoCommit(false);
 			int linkid = 0;
-			if(Lib.isNumeric(Input[1]))		
+			if(Input.length > 1 && Lib.isNumeric(Input[1]))		
 			{
 				linkid = Integer.parseInt(Input[1]);
 				statement.execute("DELETE FROM Link WHERE Link_ID = "+linkid);
 			}
-			else
+			else if(Input.length > 1)
 			{
 				statement.execute("SELECT @A:=Link_ID FROM Link WHERE Link = \'" + Input[1] + "'");
 				statement.execute("DELETE FROM Link WHERE Link_ID = @A");
+			}
+			else
+			{
+				statement.execute("SELECT" +
+						"@A:=Link_ID " +
+						"FROM Link " +
+						"ORDER BY Link_ID DESC " +
+						"LIMIT 1");
+				statement.execute("DELETE " +
+						"FROM Link " +
+						"WHERE Link_ID = @A");
 			}
 			
 			con.commit();
@@ -472,36 +492,79 @@ public class SQLQuerries {
 		return info;
 	}
 	
-	public static void tagCount() throws SQLFuckupExeption
+	public static ArrayList<String> tagCount() throws SQLFuckupExeption
 	{
+		ArrayList<String> Tags = new ArrayList<String>();
 		connectToDB();
 		try {
-			statement = con.createStatement();
+			pst = con.prepareStatement("SELECT "+
+					"Tag.Name "+
+					", COUNT(Tag.Name) as tag_count "+
+					"FROM LinkTag "+
+					"JOIN Tag ON LinkTag.Tag_ID=Tag.Tag_ID "+
+					"GROUP BY Tag.Name "+
+					"ORDER BY tag_count DESC "+
+					"LIMIT 5");
 		} catch (SQLException e) {
 			System.out.println("Could not Querry! " + e.getLocalizedMessage());
 		}
+		try {
+			rs = pst.executeQuery();
+			while (rs.next())
+			{
+				Tags.add(rs.getString(1) + " - "+ rs.getString(2));
+	        }
+        	
+		} catch (SQLException e) {
+			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+		}
+		int linksWithoutTags = 0;
+		int links = 0;
 		
 		try {
-				statement.execute("SELECT "+
-						"Tag.Name "+
-						", COUNT(Tag.Name) as tag_count "+
-						"FROM LinkTag "+
-						"JOIN Tag ON LinkTag.Tag_ID=Tag.Tag_ID "+
-						"GROUP BY Tag.Name "+
-						"ORDER BY tag_count DESC "+
-						"LIMIT 5");
-			
-			con.commit();
+			pst = con.prepareStatement("SELECT " +
+					"COUNT(l.Link_ID) " +
+					"FROM Link l " +
+					"LEFT OUTER JOIN LinkTag lt on l.Link_ID = lt.Link_ID " +
+					"WHERE lt.Link_ID is null");
 		} catch (SQLException e) {
-			try {
-				con.rollback();
-			} catch (SQLException e1) {
-				System.out.println("Could not Rollback" + e1.getLocalizedMessage());
-			}
+			System.out.println("Could not Querry! " + e.getLocalizedMessage());
+		}
+		try {
+			rs = pst.executeQuery();
+			while (rs.next())
+			{
+				linksWithoutTags = rs.getInt(1);
+	        }
+        	
+		} catch (SQLException e) {
 			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
-		} finally {
+		}
+		
+		try {
+			pst = con.prepareStatement("SELECT " +
+					"COUNT(Link_ID) " +
+					"FROM Link ");
+		} catch (SQLException e) {
+			System.out.println("Could not Querry! " + e.getLocalizedMessage());
+		}
+		try {
+			rs = pst.executeQuery();
+			while (rs.next())
+			{
+				links = rs.getInt(1);
+	        }
+        	
+		} catch (SQLException e) {
+			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+		}
+		
+		finally {
 			closeDB();
 		}
+		Tags.add("Num Links: " + links + " Num Links w/t no tag: " + linksWithoutTags);
+		
+		return Tags;
 	}
 	
 	/* Inte speciellt viktiga nu

@@ -12,12 +12,13 @@ import java.util.Random;
 public class BotTankar {
 	private static boolean topicGeneration = false;
 	private static boolean addLink = false;
-	private static boolean spotify = false;
-	private static char Char = '!';
+	private static char Char = '#';
 	private static ArrayList<String> disabledCommands= new ArrayList<String>();
 	private static ArrayList<String> ignoredUsers= new ArrayList<String>();
+	private static String input = "";
+	private static String[] data = null;
 	
-	public static void evaluate(IRCProtocol p, String input)
+	public static void evaluate(IRCProtocol p)
 	{
 		/*for(int i = 0; i < disabledCommands.size(); i++)
 		{
@@ -25,13 +26,19 @@ public class BotTankar {
 		}*/
 		
 		// Start by splitting the input string by whitespaces
+        try{
+        	data = p.getChannelDataArray();
+        	input = data[3];
+        	input = input.substring(1);
+        }catch(Exception ex){}
+        System.out.println("Channel data: "+input);
 		String[] Input = input.split("\\s+");
 		
 		
 		// Commands for user to use
-		if(!disabledCommands.contains(Input[0].toUpperCase()))
+		if(data[1].equalsIgnoreCase("PRIVMSG") && !disabledCommands.contains(Input[0].toUpperCase()))
 		{
-			if(Input[0].equalsIgnoreCase(Char + "Bored"))
+			if(Input[0].equalsIgnoreCase(Char + "Bored") || Input[0].equalsIgnoreCase(Char + "Random"))
 			{
 				bored(p,Input);
 			}
@@ -80,6 +87,14 @@ public class BotTankar {
 			{
 				linkInfo(p,Input);
 			}
+			else if(Input[0].equalsIgnoreCase(Char + "TopTags"))
+			{
+				topTags(p);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Youtube"))
+			{
+				youtube(p,Input);
+			}
 		
 		//Special
 		//Looking thru  all the words in a post
@@ -89,6 +104,7 @@ public class BotTankar {
 			//System.out.println("Now we are at ELSE");
 			ArrayList<String> tags = new ArrayList<String>();
 			String url = "";
+			int type = 2;
 			for(int i = 0; i < Input.length; i++)
 			{
 				//And here you can look for specefic words! :D
@@ -97,14 +113,18 @@ public class BotTankar {
 					System.out.println("Found link!");
 					if(Input[i].contains("open.spotify.com"))
 					{
-						spotify = true;
+						type = 1;
+					}
+					else if(Input[i].contains("youtube.com"))
+					{
+						type = 3;
 					}
 					url = Input[i];
 					addLink = true;
 					if(!disabledCommands.contains("readlink"));
 					{
 						try {
-							p.sendDataToChannel(getHtmlTag("title", getHtmlCode(Input[i])));
+							p.sendDataToChannel("Title: " + getHtmlTag("title", getHtmlCode(Input[i])));
 						} catch (IOException e) {
 							System.out.println("Cant send data" + e.getLocalizedMessage());
 						}
@@ -118,11 +138,6 @@ public class BotTankar {
 			if(addLink && !disabledCommands.contains("addlink"))
 			{
 				//System.out.println("Adding link");
-				int type = 2;
-				if(spotify)
-				{
-					type = 1;
-				}
 				try {
 					if(SQLQuerries.addLink(url, type, tags))
 					{
@@ -136,6 +151,8 @@ public class BotTankar {
 					CLib.print("Cant add new link! " + e.getLocalizedMessage());
 				}
 			}
+			dinMamma(p);
+			morn(p, Input);
 		}
 		}
 	}
@@ -198,6 +215,35 @@ public class BotTankar {
 			}
 		} catch (SQLFuckupExeption e) {
 			CLib.print("Cant get Random Spotify! " + e.getLocalizedMessage());
+		}
+	}
+	
+	public static void youtube(IRCProtocol p,String[] Input)
+	{
+		String tag = "";
+		if(Input.length > 1)
+		{
+			tag = Input[1];
+			System.out.println("TAG:" + tag);
+		}
+		try {
+			String svar = SQLQuerries.getRandomLink(tag, 3);
+			if(svar != null)
+				try {
+					p.sendDataToChannel(svar);
+				} catch (IOException e1) {
+					System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+				}
+			else
+			{
+				try {
+					p.sendDataToChannel("No link found");
+				} catch (IOException e1) {
+					System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+				}
+			}
+		} catch (SQLFuckupExeption e) {
+			CLib.print("Cant get Random Youtube! " + e.getLocalizedMessage());
 		}
 	}
 	
@@ -287,7 +333,7 @@ public class BotTankar {
 				if(Input[1].equalsIgnoreCase("bored") || Input[1].equalsIgnoreCase(Char+"bored"))
 				{
 					
-					p.sendDataToChannel(Char+"Bored [tag] gets and posts a random link from the database of previously posted and tagged links.");
+					p.sendDataToChannel(" " + Char+"Bored [tag] gets and posts a random link from the database of previously posted and tagged links.");
 					p.sendDataToChannel("If no tag is givven a totaly random link is taken. VARNING, May contain NSFW links.");
 				}
 				else if(Input[1].equalsIgnoreCase("spotify") || Input[1].equalsIgnoreCase(Char+"spotify"))
@@ -382,6 +428,53 @@ public class BotTankar {
 			}
 		} catch (SQLFuckupExeption e) {
 			CLib.print("Cant delete Link! " + e.getLocalizedMessage());
+		}
+	}
+	
+	public static void topTags(IRCProtocol p)
+	{ 
+		ArrayList<String> tagCount = null;
+		try {
+			tagCount = SQLQuerries.tagCount();
+		} catch (SQLFuckupExeption e) {
+			CLib.print("Cant get TopTags! " + e.getLocalizedMessage());
+		}
+		for(int i = 0; i < 4; i++)
+		{
+			try {
+				p.sendDataToChannel("Tag #"+(i+1)+" "+tagCount.get(i));
+			} catch (IOException e) {
+				System.out.println("Could not send data to server " + e.getLocalizedMessage());
+			}
+		}
+		try {
+			p.sendDataToChannel(tagCount.get(5));
+		} catch (IOException e) {
+			System.out.println("Could not send data to server " + e.getLocalizedMessage());
+		}
+	}
+	
+	private static void dinMamma(IRCProtocol p)
+	{
+		if(new Random().nextInt(50) == 50)
+		{
+			try {
+				p.sendDataToChannel("Din mamma " + input + " OOOOOH");
+			} catch (IOException e) {
+				System.out.println("Cant get input data" + e.getLocalizedMessage());
+			}
+		}
+	}
+	
+	private static void morn(IRCProtocol p, String[] Input)
+	{
+		if(Input[0].equalsIgnoreCase("morn") || Input[0].equalsIgnoreCase("morrn") || Input[0].equalsIgnoreCase("morgon"))
+		{
+			try {
+				p.sendDataToChannel("Morn!");
+			} catch (IOException e) {
+				System.out.println("Cant get input data" + e.getLocalizedMessage());
+			}
 		}
 	}
 	
