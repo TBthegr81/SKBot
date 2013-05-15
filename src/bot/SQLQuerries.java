@@ -64,7 +64,7 @@ public class SQLQuerries {
 		sqlport = port;
 	}
 	
-	public static void addLink(String link, int type, ArrayList<String> Tags) throws SQLFuckupExeption
+	public static boolean addLink(String link, int type, ArrayList<String> Tags) throws SQLFuckupExeption
 	{
 		connectToDB();
 		/*
@@ -91,6 +91,8 @@ public class SQLQuerries {
 		} catch (SQLException e) {
 			try {
 				con.rollback();
+				closeDB();
+				return false;
 			} catch (SQLException e1) {
 				System.out.println("Could not Rollback" + e1.getLocalizedMessage());
 			}
@@ -98,6 +100,7 @@ public class SQLQuerries {
 		} finally {
 			closeDB();
 		}
+		return true;
 	}
 	
 	public static String getRandomLink(String Tag, int type)  throws SQLFuckupExeption
@@ -469,7 +472,7 @@ public class SQLQuerries {
 		return info;
 	}
 	
-	public static void addFeed(String[] Input) throws SQLFuckupExeption
+	public static void tagCount() throws SQLFuckupExeption
 	{
 		connectToDB();
 		try {
@@ -479,18 +482,14 @@ public class SQLQuerries {
 		}
 		
 		try {
-			con.setAutoCommit(false);
-			int linkid = 0;
-			if(Lib.isNumeric(Input[1]))		
-			{
-				linkid = Integer.parseInt(Input[1]);
-				statement.execute("DELETE FROM Link WHERE Link_ID = "+linkid);
-			}
-			else
-			{
-				statement.execute("SELECT @A:=Link_ID FROM Link WHERE Link = \'" + Input[1] + "'");
-				statement.execute("DELETE FROM Link WHERE Link_ID = @A");
-			}
+				statement.execute("SELECT "+
+						"Tag.Name "+
+						", COUNT(Tag.Name) as tag_count "+
+						"FROM LinkTag "+
+						"JOIN Tag ON LinkTag.Tag_ID=Tag.Tag_ID "+
+						"GROUP BY Tag.Name "+
+						"ORDER BY tag_count DESC "+
+						"LIMIT 5");
 			
 			con.commit();
 		} catch (SQLException e) {

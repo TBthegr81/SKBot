@@ -43,10 +43,6 @@ public class BotTankar {
 			{
 				topicGen(p,Input);
 			}
-			else if(Input[0].contains("Day") && Input[1].contains("changed"))
-			{
-				generateTopic(p);
-			}
 			
 			else if(Input[0].equalsIgnoreCase(Char + "Coin"))
 			{
@@ -68,7 +64,7 @@ public class BotTankar {
 			{
 				help(p,Input);
 			}
-			else if(Input[0].equalsIgnoreCase(Char + "DelLink"))
+			else if(Input[0].equalsIgnoreCase(Char + "Rmlink"))
 			{
 				delLink(p,Input);
 			}
@@ -128,11 +124,13 @@ public class BotTankar {
 					type = 1;
 				}
 				try {
-					SQLQuerries.addLink(url, type, tags);
-					try {
-						p.sendDataToChannel("Adding Link: " + url);
-					} catch (IOException e1) {
-						System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+					if(SQLQuerries.addLink(url, type, tags))
+					{
+						try {
+							p.sendDataToChannel("Adding Link");
+						} catch (IOException e1) {
+							System.out.println("Could not send data to server " + e1.getLocalizedMessage());
+						}
 					}
 				} catch (SQLFuckupExeption e) {
 					CLib.print("Cant add new link! " + e.getLocalizedMessage());
@@ -305,12 +303,33 @@ public class BotTankar {
 				{
 					p.sendDataToChannel(Char+"Dice rolls a virtual 6-sided dice and returns the result");
 				}
+				else if(Input[1].equalsIgnoreCase("rmlink") || Input[1].equalsIgnoreCase(Char+"rmlink"))
+				{
+					p.sendDataToChannel(Char+"rmlink <linkid>/<link> Removes that link specefied from the database");
+				}
+				else if(Input[1].equalsIgnoreCase("linkinfo") || Input[1].equalsIgnoreCase(Char+"linkinfo"))
+				{
+					p.sendDataToChannel(Char+"Linkinfo <linkid>/<link> returns data about the specefied link, like ID, the link itself and tags.");
+				}
+				else if(Input[1].equalsIgnoreCase("proxxi") || Input[1].equalsIgnoreCase(Char+"proxxi"))
+				{
+					p.sendDataToChannel(Char+"proxxi returns if Proxxi is opened or closed right now.");
+				}
+				else if(Input[1].equalsIgnoreCase("disable") || Input[1].equalsIgnoreCase(Char+"disable"))
+				{
+					p.sendDataToChannel(Char+"disable <!command> can turn of a command that the bot uses. If so, it wont answer any calls for that command.");
+				}
+				else if(Input[1].equalsIgnoreCase("toptags") || Input[1].equalsIgnoreCase(Char+"toptags"))
+				{
+					p.sendDataToChannel(Char+"topTags returns the top 5 most used tags");
+				}
 			}
 			else
 			{
 				p.sendDataToChannel("This is the Snekabel Bot. I can help with a few things in the chat, here is a list of what i can do.");
-				p.sendDataToChannel(Char+"Bored [tag], "+Char+"Spotify [tag], "+Char+"Coin, "+Char+"Dice");
+				p.sendDataToChannel(Char+"Bored [tag], "+Char+"Spotify [tag], "+Char+"Coin, "+Char+"Dice, " +Char+"Disable <"+Char+"command>, "+Char+"Proxxi, "+Char+"Linkinfo <linkid>/<link>, "+Char+"rmlink <linkid>/<link>");
 				p.sendDataToChannel("Write "+Char+"Help [command] to get detailed descriptions about the use of the commands");
+				p.sendDataToChannel("This IRC Bot is made by and maintained by TB, Kira and others from the #Snekabel channel.");
 			}
 		} catch (IOException e1) {
 			System.out.println("Could not send data to server " + e1.getLocalizedMessage());
