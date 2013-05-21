@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -153,6 +154,7 @@ public class BotTankar {
 			}
 			dinMamma(p);
 			morn(p, Input);
+			hal9k(p);
 		}
 		}
 	}
@@ -393,8 +395,10 @@ public class BotTankar {
 	
 	public static void proxxi(IRCProtocol p)
 	{
+		String bruse = getHtmlCode("https://bruse.proxxi.org/is_proxxi_open_eng.php");
 		String status = "stängt";
-		if(true)
+		System.out.println(bruse);
+		if(bruse.contains("1"))
 		{
 			status = "öppet";
 		}
@@ -456,10 +460,22 @@ public class BotTankar {
 	
 	private static void dinMamma(IRCProtocol p)
 	{
-		if(new Random().nextInt(50) == 50)
+		if(new Random().nextInt(50) == 1)
 		{
 			try {
 				p.sendDataToChannel("Din mamma " + input + " OOOOOH");
+			} catch (IOException e) {
+				System.out.println("Cant get input data" + e.getLocalizedMessage());
+			}
+		}
+	}
+	
+	private static void hal9k(IRCProtocol p)
+	{
+		if(new Random().nextInt(40) == 1)
+		{
+			try {
+				p.sendDataToChannel("I'm Sorry Dave, I'm afraid i cant do that.");
 			} catch (IOException e) {
 				System.out.println("Cant get input data" + e.getLocalizedMessage());
 			}

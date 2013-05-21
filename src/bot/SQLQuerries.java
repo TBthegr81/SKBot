@@ -92,6 +92,7 @@ public class SQLQuerries {
 			try {
 				con.rollback();
 				closeDB();
+				
 				return false;
 			} catch (SQLException e1) {
 				System.out.println("Could not Rollback" + e1.getLocalizedMessage());
@@ -373,7 +374,9 @@ public class SQLQuerries {
 				System.out.println("Could not Rollback" + e1.getLocalizedMessage());
 			}
 			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
-		} finally {
+		}
+		
+		finally {
 			closeDB();
 		}
 	}
@@ -396,7 +399,7 @@ public class SQLQuerries {
 			}
 			else if(Input.length > 1)
 			{
-				statement.execute("SELECT @A:=Link_ID FROM Link WHERE Link = \'" + Input[1] + "'");
+				statement.execute("SELECT @A:=Link_ID Link FROM Link WHERE Link = \'" + Input[1] + "'");
 				statement.execute("DELETE FROM Link WHERE Link_ID = @A");
 			}
 			else
