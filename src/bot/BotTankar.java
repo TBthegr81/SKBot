@@ -8,19 +8,26 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 public class BotTankar {
 	private static boolean topicGeneration = false;
 	private static boolean addLink = false;
-	private static char Char = '#';
+	private static char Char = '!';
 	private static ArrayList<String> disabledCommands= new ArrayList<String>();
 	private static ArrayList<String> ignoredUsers= new ArrayList<String>();
 	private static String input = "";
 	private static String[] data = null;
+	private static GregorianCalendar gc = new GregorianCalendar();
+	private static Date d;
 	
 	public static void evaluate(IRCProtocol p)
 	{
+		d = new Date();
+		gc.setTime(d);
 		/*for(int i = 0; i < disabledCommands.size(); i++)
 		{
 			System.out.println(disabledCommands.get(i));
@@ -96,6 +103,10 @@ public class BotTankar {
 			{
 				youtube(p,Input);
 			}
+			else if(Input[0].equalsIgnoreCase(Char + "!linkStats"))
+			{
+				linkStats(p);
+			}
 		
 		//Special
 		//Looking thru  all the words in a post
@@ -135,6 +146,10 @@ public class BotTankar {
 				{
 					tags.add(Input[i]+"");
 				}
+				else if(Input[i].contains("<tm>"))
+				{
+					tm(p, Input, i);
+				}
 			}
 			if(addLink && !disabledCommands.contains("addlink"))
 			{
@@ -155,6 +170,13 @@ public class BotTankar {
 			dinMamma(p);
 			morn(p, Input);
 			hal9k(p);
+			/*
+			String logging = null;
+			for(int i = 0; i < Input.length; i++)
+			{
+				logging = logging + " " + Input[i];
+			}
+			log(logging);*/
 		}
 		}
 	}
@@ -492,6 +514,33 @@ public class BotTankar {
 				System.out.println("Cant get input data" + e.getLocalizedMessage());
 			}
 		}
+	}
+	
+	public static void log(String logging)
+	{
+		//SQLQuerries.log(d,logging);
+		CLib.print(gc.toString() + " " + logging);
+	}
+	
+	public static void tm(IRCProtocol p, String[] Input, int j)
+	{
+		String trademarked = "";
+		for(int i = 0; i < j; i++)
+		{
+			trademarked = trademarked + " " + Input[i];
+		}
+		String tmtext = "'" + trademarked +"' Trademarked " + gc.get(Calendar.YEAR) + " - " + (gc.get(Calendar.YEAR)+1) + " by TB";
+		CLib.print(tmtext);
+		try {
+			p.sendDataToChannel(tmtext);
+		} catch (IOException e) {
+			System.out.println("Cant send data to Channel" + e.getLocalizedMessage());
+		}
+	}
+	
+	public static void linkStats(IRCProtocol p)
+	{
+		//
 	}
 	
 	

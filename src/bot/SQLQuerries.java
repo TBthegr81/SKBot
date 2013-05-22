@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
+
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 public class SQLQuerries {
@@ -568,6 +570,35 @@ public class SQLQuerries {
 		Tags.add("Num Links: " + links + " Num Links w/t no tag: " + linksWithoutTags);
 		
 		return Tags;
+	}
+	
+	public static void log(Date d, String logging) throws SQLFuckupExeption
+	{
+		connectToDB();
+		/*
+		 * Add the person to the person table
+		 */
+		try {
+			statement = con.createStatement();
+		} catch (SQLException e) {
+			System.out.println("Could not Querry! " + e.getLocalizedMessage());
+		}
+		
+		try {
+			con.setAutoCommit(false);
+			//statement.execute("INSERT INTO Link(Link,Type,LinkHash) VALUES('" + link + "'," + type + ", '" + Lib.md5(link)+ "')");
+			statement.execute("SELECT @A:=Link_ID FROM Link ORDER BY Link_ID DESC LIMIT 1;");
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Could not Rollback" + e1.getLocalizedMessage());
+			}
+			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+		} finally {
+			closeDB();
+		}
 	}
 	
 	/* Inte speciellt viktiga nu
