@@ -124,6 +124,7 @@ public class CLib {
 		public static boolean choiceyn(String question)
 		{
 			Scanner sc = new Scanner(System.in);
+			@SuppressWarnings("unused")
 			int rightAnswer = 0;
 			boolean answer = false;
 			writed(question);

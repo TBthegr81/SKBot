@@ -17,7 +17,7 @@ public class User {
 		this.nickname = nickname;
 	}
 	
-	public void setHostname(String Hostname)
+	public void setHostname(String hostname)
 	{
 		this.hostname = hostname;
 	}

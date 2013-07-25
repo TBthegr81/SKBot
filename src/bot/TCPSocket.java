@@ -17,15 +17,15 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class TCPSocket{
+	@SuppressWarnings("unused")
     private String host = "", data = "";
-    private int port = 0;
+    @SuppressWarnings("unused")
+	private int port = 0;
     private Socket socket;
     DataOutputStream outPutStream = null;
     BufferedReader inputStream = null;
@@ -63,6 +63,7 @@ public class TCPSocket{
     }
     public void sendData(String data) throws IOException{
         outPutStream.writeBytes(data);
+        outPutStream.flush();
     }
     @Override
     public String toString(){

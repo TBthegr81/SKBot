@@ -120,13 +120,23 @@ public class SQLQuerries {
 			{
 				typeC = "= " + type;
 			}
-			if(Tag != "")
+			if(Tag != "" && !Tag.equals("#null"))
 			{
 				pst = con.prepareStatement("SELECT Link " +
 						"FROM Link " +
 						"JOIN LinkTag on Link.Link_ID=LinkTag.Link_ID " +
 						"JOIN Tag ON LinkTag.Tag_ID=Tag.Tag_ID " +
 						"WHERE UPPER(Tag.Name) = UPPER('"+ Tag +"') "+
+						"AND Type " + typeC + " " +
+						"ORDER BY RAND() " +
+						"LIMIT 1");
+			}
+			else if(Tag.equals("#null"))
+			{
+				pst = con.prepareStatement("SELECT Link " +
+						"FROM Link l " +
+						"LEFT OUTER JOIN LinkTag lt on l.Link_ID = lt.Link_ID " +
+						"WHERE lt.Link_ID is null "+
 						"AND Type " + typeC + " " +
 						"ORDER BY RAND() " +
 						"LIMIT 1");
@@ -142,7 +152,6 @@ public class SQLQuerries {
 		} catch (SQLException e) {
 			System.out.println("Could not Querry! " + e.getLocalizedMessage());
 		}
-		int i = 1;
 		try {
 			rs = pst.executeQuery();
 			while (rs.next())
@@ -175,6 +184,7 @@ public class SQLQuerries {
 		} catch (SQLException e) {
 			System.out.println("Could not Querry! " + e.getLocalizedMessage());
 		}
+		@SuppressWarnings("unused")
 		int i = 1;
 		try {
 			rs = pst.executeQuery();
@@ -600,6 +610,136 @@ public class SQLQuerries {
 			closeDB();
 		}
 	}
+	
+	public static int countTag(String tag)  throws SQLFuckupExeption
+	{
+		int count = 0;
+		connectToDB();
+		try {
+				pst = con.prepareStatement("SELECT " +
+					"COUNT(LinkTag.Link_ID) " +
+					"FROM LinkTag " +
+					"JOIN Tag ON LinkTag.Tag_ID=Tag.Tag_ID " +
+					"WHERE Tag.Name = '" + tag + "'");
+		} catch (SQLException e) {
+			System.out.println("Could not Querry! " + e.getLocalizedMessage());
+		}
+		try {
+			rs = pst.executeQuery();
+			while (rs.next())
+			{
+				count = rs.getInt(1);
+	        }
+        	
+		} catch (SQLException e) {
+			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+		}
+		
+		finally {
+			closeDB();
+		}
+		return count;
+	}
+	
+	public static boolean addTags(String link, ArrayList<String> Tags) throws SQLFuckupExeption
+	{
+		connectToDB();
+		/*
+		 * Add the person to the person table
+		 */
+		try {
+			statement = con.createStatement();
+		} catch (SQLException e) {
+			System.out.println("Could not Querry! " + e.getLocalizedMessage());
+		}
+		
+		try {
+			con.setAutoCommit(false);
+			statement.execute("SELECT @A:=Link_ID FROM Link WHERE Link = '"+ link +"'");
+			for(int i = 0; i < Tags.size(); i++)
+			{
+				CLib.print("Tag:" + Tags.get(i));
+				statement.execute("INSERT IGNORE INTO Tag(Name) VALUES('"+ Tags.get(i)+"')");
+				statement.execute("SELECT @B:=Tag_ID FROM Tag WHERE Name = '"+ Tags.get(i)+"'");
+				statement.execute("INSERT INTO LinkTag(Link_ID,Tag_ID) VALUES(@A,@B);");
+			}
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+				closeDB();
+				
+				return false;
+			} catch (SQLException e1) {
+				System.out.println("Could not Rollback" + e1.getLocalizedMessage());
+			}
+			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+		} finally {
+			closeDB();
+		}
+		return true;
+	}
+	
+	public static ArrayList<Command> getCommands() throws SQLFuckupExeption
+	{
+		ArrayList<Command> Commands = new ArrayList<Command>();
+		connectToDB();
+		try {
+			pst = con.prepareStatement("SELECT * FROM Command");
+		} catch (SQLException e) {
+			System.out.println("Could not Querry! " + e.getLocalizedMessage());
+		}
+		try {
+			rs = pst.executeQuery();
+			while (rs.next())
+			{
+				Commands.add(new Command(rs.getString(2), rs.getString(3), rs.getString(4)));
+				System.out.println(rs.getString(2) + " | " + rs.getString(3) + " | " + rs.getString(4));
+	        }
+        	
+		} catch (SQLException e) {
+			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+		}
+		
+		finally {
+			closeDB();
+		}
+		return Commands;
+	}
+	
+	public static ArrayList<String> getPokemonID(String Name) throws SQLFuckupExeption
+	{
+		ArrayList<String> Pokemon = new ArrayList<String>();
+		connectToDB();
+		try {
+			pst = con.prepareStatement("SELECT * FROM Pokemon WHERE Name = \"" + Name + "\"");
+		} catch (SQLException e) {
+			System.out.println("Could not Querry! " + e.getLocalizedMessage());
+		}
+		try {
+			rs = pst.executeQuery();
+			while (rs.next())
+			{
+				Pokemon.add(rs.getString(1));
+				Pokemon.add(rs.getString(2));
+	        }
+        	
+		} catch (SQLException e) {
+			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+		}
+		
+		finally {
+			closeDB();
+		}
+		if(!Pokemon.isEmpty())
+		{
+			String DexID = Pokemon.get(0);
+			Pokemon.set(0, DexID.substring(2));
+		}
+		
+		return Pokemon;
+	}
+	
 	
 	/* Inte speciellt viktiga nu
 	public static void addEmail(String Email) throws SQLFuckupExeption
