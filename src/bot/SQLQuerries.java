@@ -204,6 +204,71 @@ public class SQLQuerries {
 		return Tags;
 	}
 	
+	public static String[] getRandomUnitQuote() throws SQLFuckupExeption
+	{
+		String[] Quote = new String[2];
+		connectToDB();
+		try {
+			pst = con.prepareStatement("SELECT " +
+					"Unit.Unit_Name," +
+					"Quotes.Quote " +
+					"FROM Quotes " +
+					"JOIN Unit ON Unit.Unit_ID = Quotes.Unit_ID " +
+					"ORDER BY RAND() " +
+					"LIMIT 1");
+		} catch (SQLException e) {
+			System.out.println("Could not Querry! " + e.getLocalizedMessage());
+		}
+		@SuppressWarnings("unused")
+		int i = 1;
+		try {
+			rs = pst.executeQuery();
+			while (rs.next())
+			{
+				Quote[0] = rs.getString(1);
+				Quote[1] = rs.getString(2);
+	        }
+        	
+		} catch (SQLException e) {
+			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+		}
+		
+		finally {
+			closeDB();
+		}
+		return Quote;
+	}
+	
+	public static String getAllUnits() throws SQLFuckupExeption
+	{
+		String Units ="";
+		connectToDB();
+		try {
+			pst = con.prepareStatement("SELECT Unit_Name "+
+									" FROM Unit");
+		} catch (SQLException e) {
+			System.out.println("Could not Querry! " + e.getLocalizedMessage());
+		}
+		@SuppressWarnings("unused")
+		int i = 1;
+		try {
+			rs = pst.executeQuery();
+			while (rs.next())
+			{
+				Units = Units + ", " + rs.getString(1);
+	        }
+        	
+		} catch (SQLException e) {
+			System.out.println("Coult not Execute Query! " + e.getLocalizedMessage());
+		}
+		
+		finally {
+			closeDB();
+		}
+		return Units;
+	}
+	
+	
 	public static void addUser(String username, String password) throws SQLFuckupExeption
 	{
 		String MD5password = Lib.md5(password);

@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -23,6 +24,11 @@ public class BotTankar {
 	private static String[] data = null;
 	private static GregorianCalendar gc = new GregorianCalendar();
 	private static Date d;
+	private static boolean Derrylmode = false;
+	private static String item = "";
+	private static int tries = 0;
+	private static boolean QuoteMode = false;
+	private static String[] Quote = new String[2];
 	
 	public static void evaluate(IRCProtocol p)
 	{
@@ -43,9 +49,10 @@ public class BotTankar {
         System.out.println("Channel data: "+input);
 		String[] Input = input.split("\\s+");
 		
+		//System.out.println("QuoteMode = " + QuoteMode);
 		
 		// Commands for user to use
-		if(data.length != 0 && data.length > 0 && Input.length > 0 && Input[0] != null)
+		if(data.length != 0 && data.length > 0 && Input.length > 0 && Input[0] != null && !Derrylmode && !QuoteMode)
 		{
 		if(data[1].equalsIgnoreCase("PRIVMSG") && !disabledCommands.contains(Input[0].toUpperCase()))
 		{
@@ -68,7 +75,7 @@ public class BotTankar {
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "Dice"))
 			{
-				dice(p);
+				dice(p,Input);
 			}
 			else if(Input[0].equalsIgnoreCase(Char + "Login"))
 			{
@@ -138,6 +145,32 @@ public class BotTankar {
 			{
 				cat(p);
 			}
+			else if(Input[0].equalsIgnoreCase(Char + "rollchar"))
+			{
+				rollChar(p);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Dyllan"))
+			{
+				DyllanGrillin(p, false, Input);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Smet"))
+			{
+				smet(p);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "Insult"))
+			{
+				rudeness(p);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "GeneralsQuotes"))
+			{
+				GeneralsQuoteGame(p, input);
+			}
+			else if(Input[0].equalsIgnoreCase(Char + "GeneralsUnits"))
+			{
+				GeneralsGetUnits(p);
+			}
+		
+			
 		
 		//Special
 		//Looking thru  all the words in a post
@@ -196,6 +229,14 @@ public class BotTankar {
 				{
 					tm(p, Input, i);
 				}
+				else if(Input[i].contains("true")||Input[i].contains("false"))
+				{
+					try {
+						p.sendDataToChannel("32 BITS!?! //Kira9204");
+					} catch (IOException e) {
+						System.out.println("Cant send message");
+					}
+				}
 			}
 			if(addLink && !disabledCommands.contains("addlink") && !tags.contains("#null"))
 			{
@@ -228,6 +269,14 @@ public class BotTankar {
 			log(logging);*/
 		}
 		}
+		}
+		else if(Derrylmode)
+		{
+			DyllanGrillin(p, true, Input);
+		}
+		else if(QuoteMode)
+		{
+			GeneralsQuoteGame(p, input);
 		}
 	}
 	
@@ -378,15 +427,23 @@ public class BotTankar {
 		}
 	}
 	
-	public static void dice(IRCProtocol p)
+	public static void dice(IRCProtocol p, String[] Input)
 	{
-		int random = new Random().nextInt(6) +1;
+		int number = 6;
+		if(Input.length > 1)
+		{
+			if(IsStringInt(Input[1]))
+			{
+				number = Integer.parseInt(Input[1]);
+			}
+		}
+		int random = new Random().nextInt(number) +1;
 		try {
 			p.sendDataToChannel("Dice says " + random);
 		} catch (IOException e1) {
 			System.out.println("Could not send data to server " + e1.getLocalizedMessage());
 		}
-		dnd(p, random);
+		dnd(p, random, number);
 	}
 	
 	//TODO This is not done
@@ -679,23 +736,35 @@ public class BotTankar {
 	}
 	
 	
-	public static void dnd(IRCProtocol p, int dice)
+	public static void dnd(IRCProtocol p, int dice, int total)
 	{
 		String svar = "";
-		switch(dice)
+		int math = total / 6;
+		System.out.println("Math:" + math);
+		
+		if(dice > 0 && dice <= math)
 		{
-		case 1: svar = "You fall into a pit, dying when you hit the ground";
-		break;
-		case 2: svar = "You trip over a treeroot, damaging your knee. Walkingspeed -1";
-		break;
-		case 3: svar = "You pick your nose to hard and gets a nosebleed. HP -2";
-		break;
-		case 4: svar = "You find a coin. Money +1";
-		break;
-		case 5: svar = "You hit the Orc in the head, killing it with a critical hit! XP +10, Money +5";
-		break;
-		case 6: svar = "You hit the dragon right in the heart killing it! You saved the village! XP +100, Money+100";
-		break;
+			svar = "You fall into a pit, dying when you hit the ground";
+		}
+		if(dice > math && dice <= math * 2)
+		{
+			svar = "You trip over a treeroot, damaging your knee. Walkingspeed -1";
+		}
+		if(dice > math * 2 && dice <= math * 3)
+		{
+			svar = "You pick your nose to hard and gets a nosebleed. HP -2";
+		}
+		if(dice > math * 3 && dice <= math * 4)
+		{
+			svar = "You find a coin. Money +1";
+		}
+		if(dice > math * 4 && dice <= math * 5)
+		{
+			svar = "You hit the Orc in the head, killing it with a critical hit! XP +10, Money +5";
+		}
+		if(dice > math * 5 && dice <= math * 6)
+		{
+			svar = "You hit the dragon right in the heart killing it! You saved the village! XP +100, Money+100";
 		}
 		
 		try {
@@ -815,6 +884,178 @@ public class BotTankar {
 		}
 	}
 	
+	public static void rollChar(IRCProtocol p)
+	{
+		String name;
+		String[] names = {"Urban", "Sven", "Thomas", "Orcbane", "Simon", "John", "Greger", "Olof", "Oden", "Tor", "Alladin", "Michael", "Kurt", "Bert", "Lisa", "Eggbert", "Bertegg", "Berttan", "Göran", "Erik", "Linus", "Prick"};
+		String[] beskrivande = {"Ugly", "Fine", "Cute", "Stupid", "Yellow", "Red", "Blue", "Green", "Black", "Dead", "Fat", "Thin", "Stupid", "Smart", "Sophisticated", "Playing", "Dumb"};
+		String[] assignemts = {"Danser", "Attacker", "Jumper", "Hitter", "Defending", "Writer", "Sleeper", "Slaughterer", "Massmurderer", "Exploder","Farter"};
+		
+		name = names[(int) (Math.random()*names.length)] + " the " + beskrivande[(int) (Math.random()*beskrivande.length)] + " "+ assignemts[(int) (Math.random()*assignemts.length)];
+		try {
+			p.sendDataToChannel("Your character: " + name);
+		} catch (IOException e) {
+			System.out.println("Cant send data to Channel" + e.getLocalizedMessage());
+		}
+	}
+	
+	public static void rudeness(IRCProtocol p)
+	{
+		String[] sass = {"Go swallow a pinecone!", "Why dont you go hump a pillow...", "I got a story for ya about your little penis...", "Go inject some cocaine in your penis!", "You son of a bitch, i should kill you right here!", "You killed Kenny! You BASTARDS!" ,"Eat trash, scum.", "Take an indian to the face, sucker." , "Eat a knuckle sandwich u dick.", "Take some metal to the face, you will look better", "In space no-one can here your annoying voice.", "I made you dinner. Eat some barf.", "I have seen chickes with more balls than you.", "My burning hook of death will kill you so hard you gonna die.", "Om du var så viktig som du tror att du är, så vore du inte här nu, vore du?", "I did your mom in my truck last night.", "You have a stinky frensh weiner!", "I fart in your food when you are not looking", "All your friends are dead.", "You bastard!", "You'r TV is FAT!", "I will dry up your watermelon so hard it will only be seeds left.", "I put a box of oranges in your stomach.", "I made your life into a 80's movie. Now have fun.", "Your Spotify-account will only play \"Africa\" by Toto", "There is nothing a hundred men or more could not do. Exept fix your FACE bitch."};
+		Random randomGenerator = new Random();
+		int index = randomGenerator.nextInt(sass.length);
+		try {
+			p.sendDataToChannel(sass[index]);
+		} catch (IOException e) {
+			System.out.println("Cant send data to server");
+		}
+	}
+	
+	public static void GeneralsQuoteGame(IRCProtocol p,String Input)
+	{
+		System.out.println("Generals Quote Game");
+		//Start Game
+		if(QuoteMode == false)
+		{
+			try {
+				Quote = SQLQuerries.getRandomUnitQuote();
+			} catch (SQLFuckupExeption e) {
+				System.out.println("Could not fetch SQL data");
+			}
+			try {
+					//p.sendDataToChannel("Welcome to the Generals Unit-Quote Guessing Game!");
+					//p.sendDataToChannel("You will get a Quote from one of the Units, now you have to answer what unit that is!");
+					//p.sendDataToChannel("For a complete list of units from Generals type !Generals Units");
+				p.sendDataToChannel("And the Quote is: " + Quote[1]);
+			} catch (IOException e) {
+				System.out.println("Cant send data to server");
+			}
+			
+			System.out.println("Unit: " + Quote[0] + " Quote: " + Quote[1]);
+			QuoteMode = true;
+		}
+		//Continue
+		else if(QuoteMode == true)
+		{
+			System.out.println("Game still running");
+				String svar = "";
+				if(Input.equalsIgnoreCase(Quote[0]) && tries < 4)
+				{
+					svar = "Thats right! " + Quote[0] + " - " + Quote[1];
+					QuoteMode = false;
+				}
+				else if(!Input.equalsIgnoreCase(Quote[0]) && tries < 4)
+				{
+					svar = "Thats not right.";
+				}
+				else if(tries >= 4)
+				{
+					svar = "You loose! Right answer was: " + Quote[0] + " - " + Quote[1];
+				}
+				try {
+					p.sendDataToChannel(svar);
+				} catch (IOException e) {
+					System.out.println("Cant send data to server");
+				}
+			
+		}
+		
+	}
+	public static void GeneralsGetUnits(IRCProtocol p)
+	{
+		String units = "";
+		try {
+			units = SQLQuerries.getAllUnits();
+		} catch (SQLFuckupExeption e) {
+			System.out.println("Could not fetch SQL data");
+		}
+		try {
+			p.sendDataToChannel(units);
+		} catch (IOException e) {
+			System.out.println("Cant send data to server");
+		}
+	}
+	
+	//TODO Actually code this, now to sleep...
+	public static void GeneralsQuoteGet(IRCProtocol p,String[] Input)
+	{
+		
+	}
+	
+	public static void smet(IRCProtocol p)
+	{
+		String recept = "1 ägg, 3 msk Kakao, 1dl smält margarin, ~1-2DL Mjöl, ~1DL Strösocker. Blanda allt i en skål o servera med en burk läsk!";
+		try {
+			p.sendDataToChannel(recept);
+		} catch (IOException e) {
+			System.out.println("Cant send data to server");
+		}
+	}
+		
+	
+	public static void DyllanGrillin(IRCProtocol p, boolean mode, String[] Input)
+	{
+		System.out.println("Playing Grillin Derryl game");
+		ArrayList<String> Inputs = new ArrayList<String>(Arrays.asList(Input));
+		String[] items = {"BASKETBALL", "GNOME", "NOTHING", "GOLD", "MONKEY"};
+		
+		if(!mode)
+		{
+			Derrylmode = true;
+			item = items[(int) (Math.random()*items.length)];
+			System.out.println("Correct Answer: " + item);
+			tries = 0;
+			try {
+				p.sendDataToChannel("What's Dylan Grillin'?");
+			} catch (IOException e) {
+				System.out.println("Cant send data to Channel" + e.getLocalizedMessage());
+			}
+		}
+		else
+		{
+			if(Inputs.size() > 1)
+			{
+				for(int i = 0; i < Inputs.size(); i++)
+				{
+					System.out.println(Inputs.get(i));
+					Inputs.set(i, Inputs.get(i).toUpperCase());
+				}
+				if(Inputs.contains(item.toUpperCase()))
+				{
+					 System.out.println("Correct");
+					 try {
+						p.sendDataToChannel("Dyllan was grillin' an " + item.toLowerCase() + "!");
+					} catch (IOException e) {
+						System.out.println("Cant send data to Channel" + e.getLocalizedMessage());
+					}
+					 Derrylmode = false;
+				}
+				else if(tries > 3)
+				{
+					System.out.println("You loose");
+					Derrylmode = false;
+					try {
+						p.sendDataToChannel("A " + item.toLowerCase(null) + "!");
+					} catch (IOException e) {
+						System.out.println("Cant send data to Channel" + e.getLocalizedMessage());
+					}
+				}
+				else
+				{
+					 System.out.println("Wrong.");
+					 System.out.println("Tries:" + tries);
+					 try {
+						p.sendDataToChannel("Bet you can't guess what im grillin!");
+					} catch (IOException e) {
+						System.out.println("Cant send data to Channel" + e.getLocalizedMessage());
+					}
+					 tries++;
+				}
+			}
+		}
+		
+	}
+	
 	
 	/*
 	 *  DOSn3rds old TheGuardian Code
@@ -863,5 +1104,16 @@ public class BotTankar {
 			tagContent += source.substring(source.toLowerCase().indexOf(tag+">")+tag.length()+1, source.toLowerCase().indexOf("</"+tag+">"));
 		}
 		return tagContent.replace("\n", "").replace("\t","").replace("  ", "");
+	}
+	
+	private static boolean IsStringInt(String input)
+	{
+		try { 
+	        Integer.parseInt(input); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    }
+	    // only got here if we didn't return false
+	    return true;
 	}
 }

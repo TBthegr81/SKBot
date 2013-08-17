@@ -29,6 +29,8 @@ public class TCPSocket{
     private Socket socket;
     DataOutputStream outPutStream = null;
     BufferedReader inputStream = null;
+    private double outStreamSize = 0;
+    private int tries = 0;
     public TCPSocket(String host, int port) throws UnknownHostException, IOException{
         connectToHost(host, port);
         
@@ -62,8 +64,14 @@ public class TCPSocket{
        return inputStream.readLine();
     }
     public void sendData(String data) throws IOException{
-        outPutStream.writeBytes(data);
-        outPutStream.flush();
+    	outStreamSize = outPutStream.size();
+    	while(outPutStream.size() < outStreamSize + data.length() && tries < 5)
+    	{
+    		outPutStream.writeBytes(data);
+            outPutStream.flush();
+            tries++;
+    	}
+    	tries = 0;
     }
     @Override
     public String toString(){
