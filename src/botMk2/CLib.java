@@ -3,6 +3,8 @@ package botMk2;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import tb.Lib;
+
 public class CLib {
 	/*
 	 * Library of stuff good to have in console-based aplications
@@ -21,6 +23,7 @@ public class CLib {
 		System.out.print(">");
 		Scanner sc = new Scanner(System.in);
 		text = sc.nextLine();
+		sc.close();
 		return text;
 	}
 	
@@ -54,6 +57,7 @@ public class CLib {
 				break;
 			}
 		}
+		sc.close();
 		return answer;
 	}
 	
@@ -103,6 +107,7 @@ public class CLib {
 			break;
 			
 		}
+		sc.close();
 		return answers;
 	}
 	
@@ -151,6 +156,7 @@ public class CLib {
 				}
 				// Skriver man något annat än yes,y,no,n så får man skriva om
 			}
+			sc.close();
 			return answer;
 		}
 }
