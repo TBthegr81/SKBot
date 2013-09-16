@@ -25,7 +25,7 @@ public class SKBot {
         System.out.println("SKBot V 2013-08-17 ALPHA");
         System.out.println("Last Maintained by: TB");
         
-        IRCProtocol p = new IRCProtocol("irc.oftc.net", 6667, "SKBot", "SnekabelServer", "#snekabel");
+        IRCProtocol p = new IRCProtocol("irc.oftc.net", 6667, "TestBot", "SnekabelServer", "#snekabelbottest");
         boolean svar = CLib.choiceyn("Dont use port 3306?");
 		if(svar == false)
 		SQLQuerries.setPort(Integer.parseInt(CLib.input("Port:")));

@@ -28,7 +28,7 @@ public class BotTankar {
 	private static String item = "";
 	private static int tries = 0;
 	private static boolean QuoteMode = false;
-	private static String[] Quote = new String[2];
+	private static String[] Quote = new String[3];
 	
 	public static void evaluate(IRCProtocol p)
 	{
@@ -926,13 +926,14 @@ public class BotTankar {
 					//p.sendDataToChannel("Welcome to the Generals Unit-Quote Guessing Game!");
 					//p.sendDataToChannel("You will get a Quote from one of the Units, now you have to answer what unit that is!");
 					//p.sendDataToChannel("For a complete list of units from Generals type !Generals Units");
-				p.sendDataToChannel("And the Quote is: " + Quote[1]);
+				p.sendDataToChannel("Faction: "+ Quote[1] +" Quote: " + Quote[2]);
 			} catch (IOException e) {
 				System.out.println("Cant send data to server");
 			}
 			
-			System.out.println("Unit: " + Quote[0] + " Quote: " + Quote[1]);
+			System.out.println("Unit: " + Quote[0] + " Quote: " + Quote[2]);
 			QuoteMode = true;
+			tries = 0;
 		}
 		//Continue
 		else if(QuoteMode == true)
@@ -941,16 +942,18 @@ public class BotTankar {
 				String svar = "";
 				if(Input.equalsIgnoreCase(Quote[0]) && tries < 4)
 				{
-					svar = "Thats right! " + Quote[0] + " - " + Quote[1];
+					svar = "Thats right! " + Quote[1] + " " + Quote[0] + " - " + Quote[2];
 					QuoteMode = false;
 				}
 				else if(!Input.equalsIgnoreCase(Quote[0]) && tries < 4)
 				{
-					svar = "Thats not right.";
+					//svar = "Thats not right.";
+					tries++;
 				}
 				else if(tries >= 4)
 				{
 					svar = "You loose! Right answer was: " + Quote[0] + " - " + Quote[1];
+					QuoteMode = false;
 				}
 				try {
 					p.sendDataToChannel(svar);

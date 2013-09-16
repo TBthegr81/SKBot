@@ -206,11 +206,12 @@ public class SQLQuerries {
 	
 	public static String[] getRandomUnitQuote() throws SQLFuckupExeption
 	{
-		String[] Quote = new String[2];
+		String[] Quote = new String[3];
 		connectToDB();
 		try {
 			pst = con.prepareStatement("SELECT " +
 					"Unit.Unit_Name," +
+					"Unit.Faction, " +
 					"Quotes.Quote " +
 					"FROM Quotes " +
 					"JOIN Unit ON Unit.Unit_ID = Quotes.Unit_ID " +
@@ -227,6 +228,7 @@ public class SQLQuerries {
 			{
 				Quote[0] = rs.getString(1);
 				Quote[1] = rs.getString(2);
+				Quote[2] = rs.getString(3);
 	        }
         	
 		} catch (SQLException e) {
