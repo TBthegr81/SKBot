@@ -1,8 +1,12 @@
 package botMk2;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.DatatypeConverter;
@@ -68,5 +72,23 @@ public class Lib {
 		    return false;  
 		  }  
 		  return true;  
+		}
+		
+		public static ArrayList<String> readFile(String path) throws IOException
+		{
+			ArrayList<String> sb;
+			BufferedReader br = new BufferedReader(new FileReader(path));
+		    try {
+		        sb = new ArrayList<String>();
+		        String line = br.readLine();
+
+		        while (line != null) {
+		            sb.add(line);
+		            line = br.readLine();
+		        }
+		    } finally {
+		        br.close();
+		    }
+		    return sb;
 		}
 }
