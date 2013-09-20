@@ -3,8 +3,6 @@ package botMk2;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import tb.Lib;
-
 public class CLib {
 	/*
 	 * Library of stuff good to have in console-based aplications

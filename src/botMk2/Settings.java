@@ -99,7 +99,7 @@ public class Settings {
 				{
 					addMail_Host(new Host(line[1], Integer.parseInt(line[2]), line[3], line[4]));
 				}
-				else if(line[0].equalsIgnoreCase("Command_blacklist") && line.length >= 5)
+				else if(line[0].equalsIgnoreCase("Command_blacklist") && line.length >= 2)
 				{
 					addCommand_blacklist(line[1]);
 				}

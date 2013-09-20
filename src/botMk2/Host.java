@@ -54,7 +54,29 @@ public class Host {
 	}
 	public String toString()
 	{
-		String newPassword = password.replaceAll("*", "*");
-		return hostname + ":" + port + " - username:" + newPassword; 
+		String returnS ="";
+		
+		if(hostname != null)
+		{
+			returnS = returnS + hostname;
+		}
+		if(port != 0)
+		{
+			returnS = returnS + " " + port;
+		}
+		if(username != null)
+		{
+			returnS = returnS + " " + username;
+		}
+		if(password != null)
+			{
+			String newPassword = "";
+			for(int i = 0; i < password.length(); i++)
+			{
+				newPassword = newPassword + "*";
+			}
+			returnS = returnS + " " + newPassword;
+			}
+		return returnS;
 	}
 }
