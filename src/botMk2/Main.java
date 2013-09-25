@@ -54,13 +54,11 @@ public class Main {
 		}
 		
 		User user = new User();
-		if(!user.parseIRCUser(":TBRPI!~tb@c-795be255.04-35-6875761.cust.bredbandsbolaget.se"))
-			{
-			System.out.println("Somethin fucked up!");
-			}
-		else
-		{
-			System.out.println("All is good");
+		String[] userA = null;
+		try {
+			userA = User.parseIRCUser(":TBRPI!~tb@c-795be255.04-35-6875761.cust.bredbandsbolaget.se");
+		} catch (Exception e) {
+			System.out.println("Cant parse IRC string! " + e.getLocalizedMessage());
 		}
 	}
 

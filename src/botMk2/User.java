@@ -71,35 +71,40 @@ public class User {
 		
 	}
 	
-	public boolean parseIRCUser(String string)
+	public static String[] parseIRCUser(String string) throws Exception
 	{
 		//:TBRPI!~tb@c-795be255.04-35-6875761.cust.bredbandsbolaget.se
+		String[] user = new String[3];
+		
 		String[] split = string.split("!");
 		if(split.length < 2)
 		{
-			return false;
+			throw new Exception();
 		}
+		//Nickname
 		String nickname = split[0].substring(1);
 		if(nickname.length()<1)
 		{
-			return false;
+			throw new Exception();
 		}
-		setNickname(nickname);
+		user[0] = nickname;
 		System.out.println(nickname);
 		String username = split[1].substring(1).split("@")[0];
 		if(username.length()<1)
 		{
-			return false;
+			throw new Exception();
 		}
-		setUsername(username);
+		//Username
+		user[1] = username;
 		System.out.println(username);
 		split = split[1].split("@");
 		if(split.length<2)
 		{
-			return false;
+			throw new Exception();
 		}
-		setHost(split[1]);
-		System.out.println(host);
-		return true;
+		//Hostname
+		user[2] = split[1];
+		System.out.println(user[2]);
+		return user;
 	}
 }
