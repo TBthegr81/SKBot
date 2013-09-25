@@ -14,8 +14,6 @@ public class Main {
 	public static void main(String[] args) {
 		setting = new Settings();
 		
-		commands = LoadCommands.load();
-		
 		//Starta botten
 		
 		//Read configfile
@@ -44,7 +42,7 @@ public class Main {
 		//Be om password till mailen
 		
 		//Skapa en tråd för Web? Audio In? Mumble? Skype?
-		
+		commands = LoadCommands.load();
 		
 		input[0] = "RANDOM";
 		System.out.println("Start eval!");
@@ -53,6 +51,16 @@ public class Main {
 			System.out.println("Command:  " + i);
 			commands.get(i).evaluate(input);
 			System.out.println(commands.get(i).getShortDescription());
+		}
+		
+		User user = new User();
+		if(!user.parseIRCUser(":TBRPI!~tb@c-795be255.04-35-6875761.cust.bredbandsbolaget.se"))
+			{
+			System.out.println("Somethin fucked up!");
+			}
+		else
+		{
+			System.out.println("All is good");
 		}
 	}
 
