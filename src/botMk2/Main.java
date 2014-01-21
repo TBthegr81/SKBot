@@ -19,6 +19,7 @@ public class Main {
 		//Read configfile
 		Path path = Paths.get("config.conf");
 		try {
+			// If no configfile can be found, create one
             Files.createFile(path);
             System.out.println("Creating file\nDont forget to set up your bot or else it wont do anything!");
         } catch (FileAlreadyExistsException e) {
@@ -33,15 +34,15 @@ public class Main {
 			System.err.println("Cant read file and/or line! " + e.getLocalizedMessage());
 		}
 		
-		//Skapa en tråd för IRC
-		//Detta börjar connecta botten till den IRC-server som står med i configfilen
+		// Create thread for IRC
+		// Start connecting bot to the servers/channels in the config-file
 		//IRCThread ircthread = new IRCThread();
 		//ircthread.start();
 		
-		//Skapa en tråd för MailO
-		//Be om password till mailen
+		// Create thread for mail-reading
+		// Ask for password for mail
 		
-		//Skapa en tråd för Web? Audio In? Mumble? Skype?
+		// Create a thread for Web? Audio In? Mumble? Skype?
 		commands = LoadCommands.load();
 		
 		input[0] = "RANDOM";
@@ -53,7 +54,9 @@ public class Main {
 			System.out.println(commands.get(i).getShortDescription());
 		}
 		
+		@SuppressWarnings("unused")
 		User user = new User();
+		@SuppressWarnings("unused")
 		String[] userA = null;
 		try {
 			userA = User.parseIRCUser(":TBRPI!~tb@c-795be255.04-35-6875761.cust.bredbandsbolaget.se");

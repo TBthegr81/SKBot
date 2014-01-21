@@ -23,7 +23,7 @@ public class Lib {
 	    return ret;
 	}
 	
-	// Metod för att generera MD5 hash av password
+	// Method for MD5-hashing
 		public static String md5(String input) {
 		    
 		    String md5 = null;
@@ -48,18 +48,19 @@ public class Lib {
 		    return md5;
 		}
 		
-		//Metod för att codea Base64
+		// Method to code string in Base64
 		public static String base64Code(String input)
 		{
 			return DatatypeConverter.parseBase64Binary(input).toString();
 		}
 		
-		//Metod för att decodea Base64
+		// Method to de-code Base64 to string
 		public static String base64DeCode(byte[] input)
 		{
 			return DatatypeConverter.printBase64Binary(input).toString();
 		}
 		
+		// Method to test if String is number
 		public static boolean isNumeric(String str)  
 		{  
 		  try  
@@ -74,6 +75,7 @@ public class Lib {
 		  return true;  
 		}
 		
+		// Method to read file and return array with whats inside
 		public static ArrayList<String> readFile(String path) throws IOException
 		{
 			ArrayList<String> sb;
