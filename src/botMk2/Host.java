@@ -70,12 +70,12 @@ public class Host {
 		}
 		if(password != null)
 			{
-			String newPassword = "";
+			/*String newPassword = "";
 			for(int i = 0; i < password.length(); i++)
 			{
 				newPassword = newPassword + "*";
-			}
-			returnS = returnS + " " + newPassword;
+			}*/
+			returnS = returnS + " " + CLib.passwordAsterics(password);
 			}
 		return returnS;
 	}

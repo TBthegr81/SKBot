@@ -2,6 +2,8 @@ package botMk2.Commands;
 
 import java.util.ArrayList;
 
+import botMk2.Lib;
+
 public class Random implements botMk2.Command {
 	private String[] triggers = {""};
 	public ArrayList<String> evaluate(String[] input) {
@@ -15,7 +17,15 @@ public class Random implements botMk2.Command {
 				//Check if there could be some other inputs to the function
 				if(input.length > 1)
 				{
-					
+					String apikey = "1234567890";
+					String datatype = "randomLink";
+					String[] tags = {"bajs"};
+					String returntype = "HTML";
+					String[] result = Lib.readWebsite("http://vps.snekabel.se/getFunctionsSKBot.php?apikey="+apikey+"&datatype="+datatype+"&tags="+tags[0]+"&returntype="+returntype);
+					for(int i = 0; i < result.length; i++)
+					{
+						System.out.println(result[i]);
+					}
 				}
 				// Else just go with the default output
 				else

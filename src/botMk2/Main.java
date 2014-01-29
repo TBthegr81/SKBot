@@ -49,19 +49,35 @@ public class Main {
 		System.out.println("Start eval!");
 		for(int i = 0; i < commands.size(); i++)
 		{
-			System.out.println("Command:  " + i);
+			System.out.println("Command:  !" + input[i]);
 			commands.get(i).evaluate(input);
 			System.out.println(commands.get(i).getShortDescription());
 		}
 		
-		@SuppressWarnings("unused")
+		//@SuppressWarnings("unused")
 		User user = new User();
-		@SuppressWarnings("unused")
+		//@SuppressWarnings("unused")
 		String[] userA = null;
 		try {
 			userA = User.parseIRCUser(":TBRPI!~tb@c-795be255.04-35-6875761.cust.bredbandsbolaget.se");
 		} catch (Exception e) {
 			System.out.println("Cant parse IRC string! " + e.getLocalizedMessage());
+		}
+		user.setNickname(userA[0]);
+		user.setUsername(userA[1]);
+		user.setHost(userA[2]);
+		
+		//Main Loop
+		while(true)
+		{
+			String[] input = {CLib.input("")};
+			//System.out.println(input);
+			for(int i = 0; i < commands.size(); i++)
+			{
+				System.out.println("Command:  !" + input[0]);
+				commands.get(i).evaluate(input);
+				System.out.println(commands.get(i).getShortDescription());
+			}
 		}
 	}
 

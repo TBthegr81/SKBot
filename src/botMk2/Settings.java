@@ -67,7 +67,7 @@ public class Settings {
 	public void addCommand_blacklist(String command)
 	{
 		Commands_blacklist.add(command);
-		System.out.println("Comamnds_blacklist added " + command);
+		System.out.println("Commands_blacklist added " + command);
 	}
 	public boolean isIRC_answerPM() {
 		return IRC_answerPM;

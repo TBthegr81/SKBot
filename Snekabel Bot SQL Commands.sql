@@ -542,3 +542,17 @@ FROM Unit;
 SELECT * FROM Unit;
 
 #UPDATE Unit SET Faction = "GLA" WHERE Unit_ID > 0;
+
+SELECT Link
+FROM Link
+JOIN LinkTag on Link.Link_ID=LinkTag.Link_ID
+JOIN Tag ON LinkTag.Tag_ID=Tag.Tag_ID
+WHERE UPPER(Tag.Name) = UPPER('bajs')
+AND UPPER(Tag.Name) = UPPER('bajs')
+AND Type = 2
+ORDER BY RAND() LIMIT 1;
+
+SELECT Link 
+ FROM Link
+ JOIN LinkTag on Link.Link_ID=LinkTag.Link_ID
+ JOIN Tag ON LinkTag.Tag_ID=Tag.Tag_ID WHERE UPPER(Tag.Name) = UPPER('bajs') AND Type = 2 ORDER BY RAND() LIMIT 1

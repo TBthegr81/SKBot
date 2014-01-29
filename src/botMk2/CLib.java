@@ -19,9 +19,10 @@ public class CLib {
 		print("\n" + Question);
 		String text = "";
 		System.out.print(">");
+		@SuppressWarnings("resource")
 		Scanner sc = new Scanner(System.in);
 		text = sc.nextLine();
-		sc.close();
+		//sc.close();
 		return text;
 	}
 	
@@ -154,5 +155,15 @@ public class CLib {
 			}
 			sc.close();
 			return answer;
+		}
+		
+		public static String passwordAsterics(String password)
+		{
+			String newPassword = "";
+			for(int i = 0; i < password.length(); i++)
+			{
+				newPassword = newPassword + "*";
+			}
+			return newPassword;
 		}
 }
