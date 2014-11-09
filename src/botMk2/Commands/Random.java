@@ -18,10 +18,10 @@ public class Random implements botMk2.Command {
 				if(input.length > 1)
 				{
 					String apikey = "1234567890";
-					String datatype = "randomLink";
+					//String datatype = "randomLink";
 					String[] tags = {"bajs"};
 					String returntype = "HTML";
-					String[] result = Lib.readWebsite("http://vps.snekabel.se/getFunctionsSKBot.php?apikey="+apikey+"&datatype="+datatype+"&tags="+tags[0]+"&returntype="+returntype);
+					String[] result = Lib.readWebsite("http://skbot.snekabel.se/api/v0/getRandomLink.php?apikey="+apikey+"&tags="+tags[0]+"&returntype="+returntype);
 					for(int i = 0; i < result.length; i++)
 					{
 						System.out.println(result[i]);
