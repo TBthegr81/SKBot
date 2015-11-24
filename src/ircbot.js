@@ -1,9 +1,9 @@
 console.log("Starting bot");
 
 var config = {
-        channels: ["#snekabel"],
-        server: "irc.oftc.net",
-        botName: "SKBot"
+        channels: ["#yourchannel"],
+        server: "your.irc.server.com",
+        botName: "BotName"
 };
 var irc = require("irc");
 if(irc == null)
