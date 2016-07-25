@@ -1,4 +1,4 @@
 SKBot
 =====
 
-Different versions of SKBot, all equally terrible
+SKBot, someone we all love to hate.
