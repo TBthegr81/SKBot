@@ -13,7 +13,37 @@ public class LoadCommands {
 		
 		commands.add(new Random());
 		commands.add(new lol());
-		
+
+		/*try {
+			Command obj = (Command) Class.forName("botMk3.Commands.Random").newInstance();
+			commands.add(obj);
+		} catch (Exception e) {
+			System.out.println("SUEPR FAIL!");
+			System.out.println(e.getLocalizedMessage());
+		}*/
+
+		/*ClassLoader classLoader = Main.class.getClassLoader();
+
+		try {
+			Class aClass = classLoader.loadClass("botMk3.Commands.*");
+			System.out.println("aClass.getName() = " + aClass.getName());
+
+
+			try {
+				Command obj = (Command) aClass.newInstance();
+				commands.add(obj);
+			} catch (Exception e) {
+				System.out.println("SUEPR FAIL!");
+				e.printStackTrace();
+			}
+
+		} catch (ClassNotFoundException e) {
+			System.out.println("SUEPR FAIL!");
+			e.printStackTrace();
+		}*/
+
+		//System.out.println("COMAMNDS: ");
+		//System.out.println(commands);
 		return commands;
 	}
 
