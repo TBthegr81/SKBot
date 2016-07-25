@@ -1,6 +1,6 @@
 package botMk3.IODatas;
 
-import botMk3.IOData;
+import botMk3.Interfaces.IOData;
 import java.util.Observable;
 
 public class IRCData extends Observable implements IOData{

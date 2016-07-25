@@ -2,9 +2,12 @@ package botMk3.Commands;
 
 import java.util.ArrayList;
 
+import botMk3.Interfaces.Command;
 import botMk3.Lib;
 
-public class Random implements botMk3.Command {
+public class Random implements Command {
+	private String name = "random";
+
 	String apikey = "1234567890";
 	String returntype = "HTML";
 	private String[] triggers = {""};
@@ -39,7 +42,8 @@ public class Random implements botMk3.Command {
 				}
 			}
 		}
-		return new ArrayList<String>();
+		//return new ArrayList<String>();
+		return answer;
 	}
 
 	public String getHelpDescription() {
@@ -53,6 +57,9 @@ public class Random implements botMk3.Command {
 		return "Returns a random link";
 	}
 
+	public String getName() {
+		return name;
+	}
 
 	public String[] getTriggers() {
 		return triggers;

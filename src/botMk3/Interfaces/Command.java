@@ -1,4 +1,4 @@
-package botMk3;
+package botMk3.Interfaces;
 
 import java.util.ArrayList;
 
@@ -11,4 +11,6 @@ public interface Command {
 	String getHelpDescription();
 	
 	String getShortDescription();
+
+	String getName();
 }

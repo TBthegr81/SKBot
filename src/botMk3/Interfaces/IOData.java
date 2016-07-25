@@ -1,4 +1,4 @@
-package botMk3;
+package botMk3.Interfaces;
 
 public interface IOData{
 	

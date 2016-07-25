@@ -1,4 +1,6 @@
 package botMk3;
+import botMk3.Interfaces.Command;
+
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -72,30 +74,35 @@ public class Main {
 		{
 			String[] input = {CLib.input("")};
 			//System.out.println(input);
-			System.out.println(input[0]);
-			System.out.println(input[0].equalsIgnoreCase("quit"));
-			/*for(int i = 0; i < input.size(); i++)
+			System.out.print("Command: ");
+			for(int i = 0; i < input.length; i++)
 			{
 				System.out.print(input[i]);
-			}*/
-			if(input[0].equalsIgnoreCase("quit"))
+			}
+			System.out.println("");
+
+			if(input[0].equalsIgnoreCase("quit") || input[0].equalsIgnoreCase("exit"))
 			{
 
 				System.out.println("Quitting!");
-				exit(1);
+				System.exit(1);
+			}
+			else if(input[0].equalsIgnoreCase("reload"))
+			{
+				System.out.println("Reloading Commands");
+				commands = LoadCommands.load();
 			}
 			else
 			{
-				System.out.println("poop");
-				/*for(int i = 0; i < commands.size(); i++)
-                                {
-					if(input[0].equalsIgnoreCase(commands[i].name)
+				for(int i = 0; i < commands.size(); i++)
+				{
+					if(input[0].equalsIgnoreCase(commands.get(i).getName()))
 					{
-                                        	System.out.println("Command:  !" + input[0]);
-                                        	commands.get(i).evaluate(input);
-                                        	System.out.println(commands.get(i).getShortDescription());
-                                	}
-				}*/
+						//System.out.println("Command:  !" + input[0]);
+						System.out.println(commands.get(i).evaluate(input));
+						System.out.println(commands.get(i).getShortDescription());
+					}
+				}
 
 			}
 		}
