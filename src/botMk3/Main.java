@@ -10,12 +10,12 @@ public class Main {
 	private static Settings setting;
 	private static ArrayList<Command> commands = new ArrayList<Command>();
 	private static String[] input = new String[1];
-	
+
 	public static void main(String[] args) {
 		setting = new Settings();
-		
+
 		//Starta botten
-		
+
 		//Read configfile
 		Path path = Paths.get("config.conf");
 		try {
@@ -33,27 +33,27 @@ public class Main {
 		} catch (IOException e) {
 			System.err.println("Cant read file and/or line! " + e.getLocalizedMessage());
 		}
-		
+
 		// Create thread for IRC
 		// Start connecting bot to the servers/channels in the config-file
 		//IRCThread ircthread = new IRCThread();
 		//ircthread.start();
-		
+
 		// Create thread for mail-reading
 		// Ask for password for mail
-		
+
 		// Create a thread for Web? Audio In? Mumble? Skype?
 		commands = LoadCommands.load();
-		
-		input[0] = "RANDOM";
+
+		/*input[0] = "RANDOM";
 		System.out.println("Start eval!");
 		for(int i = 0; i < commands.size(); i++)
 		{
 			System.out.println("Command:  !" + input[i]);
 			commands.get(i).evaluate(input);
 			System.out.println(commands.get(i).getShortDescription());
-		}
-		
+		}*/
+
 		//@SuppressWarnings("unused")
 		User user = new User();
 		//@SuppressWarnings("unused")
@@ -66,17 +66,37 @@ public class Main {
 		user.setNickname(userA[0]);
 		user.setUsername(userA[1]);
 		user.setHost(userA[2]);
-		
+
 		//Main Loop
 		while(true)
 		{
 			String[] input = {CLib.input("")};
 			//System.out.println(input);
-			for(int i = 0; i < commands.size(); i++)
+			System.out.println(input[0]);
+			System.out.println(input[0].equalsIgnoreCase("quit"));
+			/*for(int i = 0; i < input.size(); i++)
 			{
-				System.out.println("Command:  !" + input[0]);
-				commands.get(i).evaluate(input);
-				System.out.println(commands.get(i).getShortDescription());
+				System.out.print(input[i]);
+			}*/
+			if(input[0].equalsIgnoreCase("quit"))
+			{
+
+				System.out.println("Quitting!");
+				exit(1);
+			}
+			else
+			{
+				System.out.println("poop");
+				/*for(int i = 0; i < commands.size(); i++)
+                                {
+					if(input[0].equalsIgnoreCase(commands[i].name)
+					{
+                                        	System.out.println("Command:  !" + input[0]);
+                                        	commands.get(i).evaluate(input);
+                                        	System.out.println(commands.get(i).getShortDescription());
+                                	}
+				}*/
+
 			}
 		}
 	}
