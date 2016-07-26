@@ -20,24 +20,6 @@ public class Main {
 
 		//Starta botten
 
-		//Read configfile
-		Path path = Paths.get("config.conf");
-		try {
-			// If no configfile can be found, create one
-            Files.createFile(path);
-            System.out.println("Creating file\nDont forget to set up your bot or else it wont do anything!");
-        } catch (FileAlreadyExistsException e) {
-            System.err.println("already exists: " + e.getMessage());
-        } catch (IOException e) {
-			System.out.println("Fuckup! " + e.getLocalizedMessage());
-		}
-		try {
-			System.out.println("Loading file");
-			setting.parseSettings(Lib.readFile("config.conf"));
-		} catch (IOException e) {
-			System.err.println("Cant read file and/or line! " + e.getLocalizedMessage());
-		}
-
 		// Create thread for IRC
 		// Start connecting bot to the servers/channels in the config-file
 		//IRCThread ircthread = new IRCThread();

@@ -1,6 +1,14 @@
 package botMk3;
 
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 
 public class Settings {
 	private Host MySQL_Host;
@@ -12,6 +20,31 @@ public class Settings {
 	private ArrayList<Host> Mail_Hosts = new ArrayList<Host>();
 	
 	private ArrayList<String> Commands_blacklist = new ArrayList<String>();
+
+	public Settings() {
+		System.out.println("Setting up settings");
+		//Read configfile
+		Path path = Paths.get("config.conf");
+		try {
+			// If no configfile can be found, create one
+			Files.createFile(path);
+
+			List<String> lines = Arrays.asList("#Example config, uncomment and fillout the correct details", "#IRC_Host irc.oftc.net 6667 SKBot", "#MySQL_Host localhost 3306 root password","#Command_blacklist !bored", "#Command_blacklist !random\n");
+			Files.write(path, lines, Charset.forName("UTF-8"));
+
+			System.out.println("Creating file\nDont forget to set up your bot or else it wont do anything!");
+		} catch (FileAlreadyExistsException e) {
+			System.err.println("already exists: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("Fuckup! " + e.getLocalizedMessage());
+		}
+		try {
+			System.out.println("Loading file");
+			parseSettings(Lib.readFile("config.conf"));
+		} catch (IOException e) {
+			System.err.println("Cant read file and/or line! " + e.getLocalizedMessage());
+		}
+	}
 	
 	
 	public Host getMySQL_Host() {
