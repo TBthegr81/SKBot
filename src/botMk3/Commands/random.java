@@ -880,7 +880,8 @@ public class random implements Command {
 
     public String getHelpDescription() {
 
-        return "Returns a random link";
+        return "random - Returns a random link from DB.\n" +
+               "random pokemon - Returns a random Pokémon";
     }
 
 
