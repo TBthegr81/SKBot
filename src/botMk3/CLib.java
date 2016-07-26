@@ -1,5 +1,7 @@
 package botMk3;
 
+import botMk3.Interfaces.Command;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -167,6 +169,7 @@ public class CLib {
 			return newPassword;
 		}
 
+	private static ArrayList<Command> commands = Main.getCommands();
     public static void evaluateInput(String[] input)
     {
         if(input[0].equalsIgnoreCase("quit") || input[0].equalsIgnoreCase("exit"))

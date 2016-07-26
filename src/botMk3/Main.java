@@ -74,4 +74,8 @@ public class Main {
         ConsoleThread consoleThread = new ConsoleThread();
         consoleThread.start();
 	}
+
+	public static ArrayList<Command> getCommands() {
+		return commands;
+	}
 }

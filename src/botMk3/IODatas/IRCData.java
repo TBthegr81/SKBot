@@ -10,8 +10,6 @@ public class IRCData extends Observable implements IOData{
 	}
 
 	public String getData() {
-		
 		return "lol";
 	}
-
 }
