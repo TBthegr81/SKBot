@@ -1,4 +1,4 @@
-package botMk3;
+package botMk3.Services;
 
 public class IRCThread extends Thread
 {

@@ -1,5 +1,6 @@
 package botMk3;
 import botMk3.Interfaces.Command;
+import botMk3.Services.*;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -70,66 +71,7 @@ public class Main {
 		user.setUsername(userA[1]);
 		user.setHost(userA[2]);
 
-		//Main Loop
-		while(true)
-		{
-			String[] input = CLib.input("").split("\\s+");;
-			//System.out.println(input[0]);
-            evaluateInput(input);
-		}
+        ConsoleThread consoleThread = new ConsoleThread();
+        consoleThread.start();
 	}
-
-    public static void evaluateInput(String[] input)
-    {
-        if(input[0].equalsIgnoreCase("quit") || input[0].equalsIgnoreCase("exit"))
-        {
-
-            System.out.println("Quitting!");
-            System.exit(1);
-        }
-        else if(input[0].equalsIgnoreCase("reload"))
-        {
-            System.out.println("Reloading Commands");
-            commands = LoadCommands.load();
-        }
-        else if(input[0].equalsIgnoreCase("help"))
-        {
-            System.out.println("Help module for SKBot");
-            if(input.length > 1)
-            {
-                System.out.println("Help for "+input[1]);
-                for(int i = 0; i < commands.size(); i++)
-                {
-                    if(commands.get(i).getName().equalsIgnoreCase(input[1]))
-                    {
-                        System.out.println(commands.get(i).getHelpDescription());
-                    }
-                }
-            }
-            else
-            {
-                System.out.println("Commands:");
-                for(int i = 0; i < commands.size(); i++)
-                {
-                    System.out.println(commands.get(i).getName() + " - " + commands.get(i).getShortDescription());
-                }
-            }
-        }
-        else
-        {
-            ArrayList<String> answers = new ArrayList<String>();
-            for(int i = 0; i < commands.size(); i++)
-            {
-                //System.out.println("Command:  !" + input[0]);
-                ArrayList<String> result = commands.get(i).evaluate(input);
-                answers.addAll(result);
-                //System.out.println(commands.get(i).getShortDescription());
-            }
-
-            for(int i = 0; i < answers.size(); i++)
-            {
-                System.out.println(answers.get(i));
-            }
-        }
-    }
 }
