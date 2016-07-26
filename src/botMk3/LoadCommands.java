@@ -11,11 +11,11 @@ public class LoadCommands {
 	{
 		ArrayList<Command> commands = new ArrayList<Command>();
 		
-		commands.add(new Random());
+		commands.add(new random());
 		commands.add(new lol());
 
 		/*try {
-			Command obj = (Command) Class.forName("botMk3.Commands.Random").newInstance();
+			Command obj = (Command) Class.forName("botMk3.Commands.random").newInstance();
 			commands.add(obj);
 		} catch (Exception e) {
 			System.out.println("SUEPR FAIL!");
