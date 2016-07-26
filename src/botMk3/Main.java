@@ -72,14 +72,15 @@ public class Main {
 		//Main Loop
 		while(true)
 		{
-			String[] input = {CLib.input("")};
-			//System.out.println(input);
-			System.out.print("Command: ");
-			for(int i = 0; i < input.length; i++)
+			//String[] input = {CLib.input("")};
+			String[] input = CLib.input("").split("\\s+");
+			System.out.println(input[0]);
+			//System.out.print("Command: ");
+			/*for(int i = 0; i < input.length; i++)
 			{
 				System.out.print(input[i]);
 			}
-			System.out.println("");
+			System.out.println("");*/
 
 			if(input[0].equalsIgnoreCase("quit") || input[0].equalsIgnoreCase("exit"))
 			{
@@ -92,16 +93,36 @@ public class Main {
 				System.out.println("Reloading Commands");
 				commands = LoadCommands.load();
 			}
+			else if(input[0].equalsIgnoreCase("help"))
+			{
+				System.out.println("Help module for SKBot");
+				if(input.length > 1)
+				{
+					System.out.println("Help for "+input[1]);
+					for(int i = 0; i < commands.size(); i++)
+					{
+						if(commands.get(i).getName().equalsIgnoreCase(input[1]))
+						{
+							System.out.println(commands.get(i).getHelpDescription());
+						}
+					}
+				}
+				else
+				{
+					System.out.println("Commands:");
+					for(int i = 0; i < commands.size(); i++)
+					{
+						System.out.println(commands.get(i).getName() + " - " + commands.get(i).getShortDescription());
+					}
+				}
+			}
 			else
 			{
 				for(int i = 0; i < commands.size(); i++)
 				{
-					if(input[0].equalsIgnoreCase(commands.get(i).getName()))
-					{
-						//System.out.println("Command:  !" + input[0]);
-						System.out.println(commands.get(i).evaluate(input));
-						System.out.println(commands.get(i).getShortDescription());
-					}
+					//System.out.println("Command:  !" + input[0]);
+					System.out.println(commands.get(i).evaluate(input));
+					//System.out.println(commands.get(i).getShortDescription());
 				}
 
 			}

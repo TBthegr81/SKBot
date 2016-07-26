@@ -1,0 +1,4 @@
+#!/bin/bash
+javac $(find ~/SKBot/src/* | grep .java)
+cd src
+java botMk3/Main

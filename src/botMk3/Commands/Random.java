@@ -10,13 +10,25 @@ public class Random implements Command {
 
 	String apikey = "1234567890";
 	String returntype = "HTML";
-	private String[] triggers = {""};
+	private String[] triggers = {"random","bored"};
+
 	public ArrayList<String> evaluate(String[] input) {
 		//String tag = "";
 		ArrayList<String> answer = new ArrayList<String>();
 		//If input isnt null, check if it coresponds with the trigger-words
 		if(input.length > 0)
 		{
+			for(int i = 0; i < triggers.length; i++)
+			{
+				if(input[0].equalsIgnoreCase(triggers[i]))
+				{
+					//System.out.println("yay");
+				}
+				else
+				{
+					//System.out.println("nah!");
+				}
+			}
 			if(input[0].equalsIgnoreCase("random") || input[0].equalsIgnoreCase("bored"))
 			{
 				//Check if there could be some other inputs to the function
