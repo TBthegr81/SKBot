@@ -13,6 +13,7 @@ public class LoadCommands {
 		
 		commands.add(new random());
 		commands.add(new lol());
+		commands.add(new link());
 
 		/*try {
 			Command obj = (Command) Class.forName("botMk3.Commands.random").newInstance();

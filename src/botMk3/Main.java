@@ -34,7 +34,7 @@ public class Main {
 		ArrayList<IRCThread> irc_threads = new ArrayList<IRCThread>();
 		for(int i = 0; i < irc_hosts.size(); i++)
 		{
-			IRCThread ircthread = new IRCThread(irc_hosts[i]);
+			IRCThread ircthread = new IRCThread(irc_hosts.get(i));
 			ircthread.start();
 			irc_threads.add(ircthread);
 		}
