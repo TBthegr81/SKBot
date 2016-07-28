@@ -36,8 +36,4 @@ public class lol implements Command {
 		return this.name;
 	}
 
-	public String[] getTriggers() {
-		return triggers;
-	}
-
 }

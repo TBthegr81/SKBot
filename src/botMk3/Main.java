@@ -16,9 +16,11 @@ public class Main {
 	private static String[] input = new String[1];
 
 	public static void main(String[] args) {
+        //Load settings
 		setting = new Settings();
 
-		//Starta botten
+        //Starta botten
+
 
 		// Create thread for IRC
 		// Start connecting bot to the servers/channels in the config-file

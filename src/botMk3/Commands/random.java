@@ -894,8 +894,4 @@ public class random implements Command {
         return name;
     }
 
-    public String[] getTriggers() {
-        return triggers;
-    }
-
 }
