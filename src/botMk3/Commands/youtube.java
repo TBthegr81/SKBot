@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class youtube implements Command {
-    private String name = "random";
+    private String name = "youtube";
 
     public ArrayList<String> evaluate(String[] input) {
         //String tag = "";
