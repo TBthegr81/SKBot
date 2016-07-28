@@ -21,27 +21,28 @@ public class Main {
 
         //Starta botten
 
-
-		// Create thread for IRC
-		// Start connecting bot to the servers/channels in the config-file
-		//IRCThread ircthread = new IRCThread();
-		//ircthread.start();
-
 		// Create thread for mail-reading
 		// Ask for password for mail
 
 		// Create a thread for Web? Audio In? Mumble? Skype?
 		commands = LoadCommands.load();
 
-		/*input[0] = "RANDOM";
-		System.out.println("Start eval!");
-		for(int i = 0; i < commands.size(); i++)
-		{
-			System.out.println("Command:  !" + input[i]);
-			commands.get(i).evaluate(input);
-			System.out.println(commands.get(i).getShortDescription());
-		}*/
 
+		// Create thread for IRC
+		// Start connecting bot to the servers/channels in the config-file
+		ArrayList<Host> irc_hosts = setting.getIRC_Hosts();
+		ArrayList<IRCThread> irc_threads = new ArrayList<IRCThread>();
+		for(int i = 0; i < irc_hosts.size(); i++)
+		{
+			IRCThread ircthread = new IRCThread(irc_hosts[i]);
+			ircthread.start();
+			irc_threads.add(ircthread);
+		}
+
+		ConsoleThread consoleThread = new ConsoleThread();
+		consoleThread.start();
+
+		/*
 		//@SuppressWarnings("unused")
 		User user = new User();
 		//@SuppressWarnings("unused")
@@ -53,10 +54,7 @@ public class Main {
 		}
 		user.setNickname(userA[0]);
 		user.setUsername(userA[1]);
-		user.setHost(userA[2]);
-
-        ConsoleThread consoleThread = new ConsoleThread();
-        consoleThread.start();
+		user.setHost(userA[2]);*/
 	}
 
 	public static ArrayList<Command> getCommands() {
