@@ -151,9 +151,14 @@ public class Lib {
 		return new String[1][1];
 	}*/
 
-	private static ArrayList<Command> commands = Main.getCommands();
+	private static ArrayList<Command> commands = new ArrayList<Command>();
 	public static void evaluateInput(String[] input)
 	{
+		if(commands.size() == 0)
+		{
+			commands = Main.getCommands();
+		}
+
 		if(input[0].equalsIgnoreCase("quit") || input[0].equalsIgnoreCase("exit"))
 		{
 
@@ -173,6 +178,7 @@ public class Lib {
 				System.out.println("Help for "+input[1]);
 				for(int i = 0; i < commands.size(); i++)
 				{
+					System.out.println("Trying: " + commands.get(i).getName());
 					if(commands.get(i).getName().equalsIgnoreCase(input[1]))
 					{
 						System.out.println(commands.get(i).getHelpDescription());

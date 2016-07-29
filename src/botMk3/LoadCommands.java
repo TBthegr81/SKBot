@@ -11,9 +11,16 @@ public class LoadCommands {
 	{
 		ArrayList<Command> commands = new ArrayList<Command>();
 		
+
 		commands.add(new random());
 		commands.add(new lol());
 		commands.add(new link());
+
+		/*System.out.println("Commands loaded");
+		for(int i=0; i < commands.size(); i++)
+		{
+			System.out.println("Command loade: "+commands.get(i).getName());
+		}*/
 
 		/*try {
 			Command obj = (Command) Class.forName("botMk3.Commands.random").newInstance();
