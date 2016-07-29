@@ -152,8 +152,9 @@ public class Lib {
 	}*/
 
 	private static ArrayList<Command> commands = new ArrayList<Command>();
-	public static void evaluateInput(String[] input)
+	public static ArrayList<String> evaluateInput(String[] input)
 	{
+        ArrayList<String> answers = new ArrayList<String>();
 		if(commands.size() == 0)
 		{
 			commands = Main.getCommands();
@@ -161,7 +162,6 @@ public class Lib {
 
 		if(input[0].equalsIgnoreCase("quit") || input[0].equalsIgnoreCase("exit"))
 		{
-
 			System.out.println("Quitting!");
 			System.exit(1);
 		}
@@ -182,6 +182,7 @@ public class Lib {
 					if(commands.get(i).getName().equalsIgnoreCase(input[1]))
 					{
 						System.out.println(commands.get(i).getHelpDescription());
+                        answers.add(commands.get(i).getHelpDescription());
 					}
 				}
 			}
@@ -191,12 +192,13 @@ public class Lib {
 				for(int i = 0; i < commands.size(); i++)
 				{
 					System.out.println(commands.get(i).getName() + " - " + commands.get(i).getShortDescription());
+                    answers.add(commands.get(i).getName() + " - " + commands.get(i).getShortDescription());
 				}
 			}
 		}
 		else
 		{
-			ArrayList<String> answers = new ArrayList<String>();
+			//ArrayList<String> answers = new ArrayList<String>();
 			for(int i = 0; i < commands.size(); i++)
 			{
 				//System.out.println("Command:  !" + input[0]);
@@ -204,11 +206,7 @@ public class Lib {
 				answers.addAll(result);
 				//System.out.println(commands.get(i).getShortDescription());
 			}
-
-			for(int i = 0; i < answers.size(); i++)
-			{
-				System.out.println(answers.get(i));
-			}
 		}
+        return answers;
 	}
 }

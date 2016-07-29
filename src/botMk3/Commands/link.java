@@ -17,6 +17,7 @@ public class link implements Command {
 	{
 		if(input[i].toLowerCase().contains("http://") || input[i].toLowerCase().contains("https://"))
 		{
+            Lib.readWebsite(input[i]);
 			title += "google.se - Search things";
 			answer.add(title);
 		}

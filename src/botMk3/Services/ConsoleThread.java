@@ -1,16 +1,27 @@
 package botMk3.Services;
 import botMk3.CLib;
 import botMk3.Lib;
+import java.util.ArrayList;
 
 /**
  * Created by TB on 2016-07-26.
  */
 public class ConsoleThread extends Thread
 {
+    ArrayList<String> answers;
+    public ConsoleThread()
+    {
+        answers = new ArrayList<String>();
+    }
     public void start() {
         while(true) {
             String[] input = CLib.input("").split("\\s+");
-            Lib.evaluateInput(input);
+            answers = Lib.evaluateInput(input);
+
+            for(String answer : answers)
+            {
+                System.out.println(answer);
+            }
         }
     }
 }

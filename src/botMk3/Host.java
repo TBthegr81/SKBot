@@ -1,10 +1,12 @@
 package botMk3;
+import java.util.ArrayList;
 
 public class Host {
 	private String hostname;
 	private int port;
 	private String username;
 	private String password;
+    private ArrayList<String> channels;
 	
 	public String getHostname()
 	{
@@ -79,4 +81,12 @@ public class Host {
 			}
 		return returnS;
 	}
+    public void setChannels(ArrayList<String> channels)
+    {
+        this.channels = channels;
+    }
+    public ArrayList<String> getChannels()
+    {
+        return channels;
+    }
 }
