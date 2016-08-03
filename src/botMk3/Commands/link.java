@@ -70,7 +70,7 @@ public class link implements Command {
                 {
                     title = getTitle(doc);
                     price = doc.select(".product-price em");
-                    title += " Price: " + price.get(0).text();
+                    if(price.size() > 0)  title += " Price: " + price.get(0).text();
                 }
                 else if(domain.equalsIgnoreCase("ikea.com"))
                 {

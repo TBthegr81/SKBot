@@ -4,6 +4,7 @@
 *.war
 *.ear
 /bin
+/out
 
 .idea
 .DS_Store
