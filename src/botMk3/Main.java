@@ -41,20 +41,6 @@ public class Main {
 
 		ConsoleThread consoleThread = new ConsoleThread();
 		consoleThread.start();
-
-		/*
-		//@SuppressWarnings("unused")
-		User user = new User();
-		//@SuppressWarnings("unused")
-		String[] userA = null;
-		try {
-			userA = User.parseIRCUser(":TBRPI!~tb@c-795be255.04-35-6875761.cust.bredbandsbolaget.se");
-		} catch (Exception e) {
-			System.out.println("Cant parse IRC string! " + e.getLocalizedMessage());
-		}
-		user.setNickname(userA[0]);
-		user.setUsername(userA[1]);
-		user.setHost(userA[2]);*/
 	}
 
 	public static ArrayList<Command> getCommands() {

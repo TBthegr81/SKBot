@@ -1,6 +1,8 @@
 package botMk3.Services;
 import botMk3.CLib;
 import botMk3.Lib;
+import botMk3.Test;
+
 import java.util.ArrayList;
 
 /**
@@ -16,11 +18,18 @@ public class ConsoleThread extends Thread
     public void start() {
         while(true) {
             String[] input = CLib.input("").split("\\s+");
-            answers = Lib.evaluateInput(input);
-
-            for(String answer : answers)
+            if(input[0].equalsIgnoreCase("test"))
             {
-                System.out.println(answer);
+                Test test = new Test();
+            }
+            else
+            {
+                answers = Lib.evaluateInput(input);
+
+                for(String answer : answers)
+                {
+                    System.out.println(answer);
+                }
             }
         }
     }
