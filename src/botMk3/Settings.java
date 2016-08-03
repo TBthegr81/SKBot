@@ -33,6 +33,7 @@ public class Settings {
 			Files.write(path, lines, Charset.forName("UTF-8"));
 
 			System.out.println("Creating file\nDont forget to set up your bot or else it wont do anything!");
+			System.exit(1);
 		} catch (FileAlreadyExistsException e) {
 			System.err.println("already exists: " + e.getMessage());
 		} catch (IOException e) {
