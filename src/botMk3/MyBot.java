@@ -19,7 +19,7 @@ public class MyBot extends PircBot {
         ArrayList<String> answers = Lib.evaluateInput(message.split("\\s+"));
         for(String answer : answers)
         {
-            sendMessage(channel, sender + ": " + answer);
+            sendMessage(channel, answer);
         }
     }
 }
