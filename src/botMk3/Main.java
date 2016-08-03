@@ -2,13 +2,7 @@ package botMk3;
 import botMk3.Interfaces.Command;
 import botMk3.Services.*;
 
-import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Main {
 	private static Settings setting;
@@ -18,6 +12,7 @@ public class Main {
 	public static void main(String[] args) {
         //Load settings
 		setting = new Settings();
+		Sqlite sql = new Sqlite();
 
         //Starta botten
 

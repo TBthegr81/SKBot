@@ -102,6 +102,12 @@ public class link implements Command {
                     price = doc.select(".bestPrice");
                     title += " Price: " + price.get(0).text();
                 }
+                else if(domain.equalsIgnoreCase("biltema.see"))
+                {
+                    title = getTitle(doc);
+                    price = doc.select(".pricePart");
+                    title += " Price: " + price.get(0).text();
+                }
                 else
                 {
                     title = getTitle(doc);
