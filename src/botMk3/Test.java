@@ -23,6 +23,13 @@ public class Test {
         input.add("https://www.blocket.se/stockholm/Kymco_super_8_68267339.htm?ca=11&w=1");
         input.add("https://www.kjell.com/se/sortiment/hus-halsa-fritid/dronare/denver-dch-330-dronare-med-hd-kamera-p50866");
 
+        input.add("http://tb.snekabel.se/fel1.html");
+        input.add("http://tb.snekabel.se/fel2.html");
+        input.add("http://tb.snekabel.se/fel3.html");
+        input.add("http://tb.snekabel.se/fel4.html");
+        input.add("http://tb.snekabel.se/fel5.html");
+        input.add("http://tb.snekabel.se/fel6.html");
+
         String[] strings = input.stream().toArray(String[]::new);
         answers = Lib.evaluateInput(strings);
 
