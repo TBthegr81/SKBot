@@ -2,6 +2,7 @@ package botMk3.Commands;
 
 import botMk3.Interfaces.Command;
 import botMk3.Lib;
+import botMk3.Sqlite;
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -39,7 +40,11 @@ public class link implements Command {
             try {
                 domain = getDomainName(input[i]);
                 System.out.println("Domain: " + domain);
+            } catch (URISyntaxException e) {
+                System.err.println("ERROR: " + e.getLocalizedMessage());
+            }
 
+            try {
                 doc = Jsoup.connect(input[i]).get();
 
                 if(domain.equalsIgnoreCase("webhallen.com"))
@@ -104,11 +109,7 @@ public class link implements Command {
                 }
                 else if(domain.equalsIgnoreCase("vimeo.com"))
                 {
-                    title = "No-one uses Vimeo...";
-                }
-                else if(domain.equalsIgnoreCase("play.spotify.com"))
-                {
-                    title = "No-one uses Vimeo...";
+                    title = "Nobody use vimeo";
                 }
                 else
                 {
@@ -119,6 +120,8 @@ public class link implements Command {
             } catch (Exception e) {
                  System.err.println("ERROR: " + e.getLocalizedMessage());
             }
+
+            Sqlite.insertLink(input[i], domain);
 		}
 	}
 	 return answer;

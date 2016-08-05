@@ -5,6 +5,7 @@ import java.util.Random;
 
 import botMk3.Interfaces.Command;
 import botMk3.Lib;
+import botMk3.Sqlite;
 
 public class random implements Command {
     private String name = "random";
@@ -846,13 +847,8 @@ public class random implements Command {
 
                         if(input[1].equalsIgnoreCase("link"))
                         {
-                            String[] tags = {"bajs"};
-                            String[] result = Lib.readWebsite("http://skbot.snekabel.se/api/v0/getRandomLink.php?apikey="+apikey+"&tags="+tags[0]+"&returntype="+returntype);
-                            for(int j = 0; j < result.length; j++)
-                            {
-                                //System.out.println(result[j]);
-                                answer.add(result[j]);
-                            }
+                            String link = getRandomLink();
+                            answer.add(link);
                         }
                         else if(input[1].equalsIgnoreCase("pokemon"))
                         {
@@ -865,12 +861,8 @@ public class random implements Command {
                     // Else just go with the default output
                     else
                     {
-                        String[] result = Lib.readWebsite("http://skbot.snekabel.se/api/v0/getRandomLink.php?apikey="+apikey+"&returntype="+returntype);
-                        for(int j = 0; j < result.length; j++)
-                        {
-                            //System.out.println(result[j]);
-                            answer.add(result[j]);
-                        }
+                        String link = getRandomLink();
+                        answer.add(link);
                     }
                 }
             }
@@ -895,4 +887,8 @@ public class random implements Command {
         return name;
     }
 
+    private static String getRandomLink()
+    {
+        return Sqlite.getRandomLink();
+    }
 }
