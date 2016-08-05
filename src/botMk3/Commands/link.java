@@ -102,11 +102,13 @@ public class link implements Command {
                     price = doc.select(".bestPrice");
                     title += " Price: " + price.get(0).text();
                 }
-                else if(domain.equalsIgnoreCase("biltema.see"))
+                else if(domain.equalsIgnoreCase("vimeo.com"))
                 {
-                    title = getTitle(doc);
-                    price = doc.select(".pricePart");
-                    title += " Price: " + price.get(0).text();
+                    title = "No-one uses Vimeo...";
+                }
+                else if(domain.equalsIgnoreCase("play.spotify.com"))
+                {
+                    title = "No-one uses Vimeo...";
                 }
                 else
                 {
