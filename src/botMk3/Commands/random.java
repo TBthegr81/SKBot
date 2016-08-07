@@ -833,7 +833,6 @@ public class random implements Command {
         //String tag = "";
         ArrayList<String> answer = new ArrayList<String>();
         Random r = new Random();
-	System.out.println("Hey");
         //If input isnt null, check if it coresponds with the trigger-words
         if(input.length > 0)
         {
