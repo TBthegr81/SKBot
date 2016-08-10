@@ -8,7 +8,6 @@ import botMk3.Lib;
 import botMk3.Sqlite;
 
 public class random implements Command {
-    private String name = "random";
 
     private String[] PokemonData = {
             "bulbasaur",
@@ -883,7 +882,8 @@ public class random implements Command {
     }
 
     public String getName() {
-        return name;
+        String[] nameparts = this.getClass().getName().split("\\.");
+        return nameparts[nameparts.length-1];
     }
 
     private static String getRandomLink()

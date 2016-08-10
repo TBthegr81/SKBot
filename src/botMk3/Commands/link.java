@@ -196,7 +196,8 @@ public class link implements Command {
     }
 
     public String getName() {
-        return name;
+        String[] nameparts = this.getClass().getName().split("\\.");
+        return nameparts[nameparts.length-1];
     }
 
     public String getTitle(Document doc) {

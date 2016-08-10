@@ -6,7 +6,6 @@ import botMk3.Lib;
 import java.util.ArrayList;
 
 public class youtube implements Command {
-    private String name = "youtube";
 
     public ArrayList<String> evaluate(String[] input) {
         //String tag = "";
@@ -27,7 +26,8 @@ public class youtube implements Command {
     }
 
     public String getName() {
-        return name;
+        String[] nameparts = this.getClass().getName().split("\\.");
+        return nameparts[nameparts.length-1];
     }
 
 }

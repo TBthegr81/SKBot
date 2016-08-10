@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 public class proxxi implements Command {
 	private String[] triggers = {""};
-	private String name = "lol";
 
 	public ArrayList<String> evaluate(String[] input) {
 		//String tag = "";
@@ -33,7 +32,8 @@ public class proxxi implements Command {
 	}
 
 	public String getName() {
-		return this.name;
+        String[] nameparts = this.getClass().getName().split("\\.");
+		return nameparts[nameparts.length-1];
 	}
 
 }

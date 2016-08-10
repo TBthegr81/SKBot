@@ -5,8 +5,6 @@ import botMk3.Interfaces.Command;
 import java.util.ArrayList;
 
 public class lol implements Command {
-	private String[] triggers = {""};
-	private String name = "lol";
 
 	public ArrayList<String> evaluate(String[] input) {
 		//String tag = "";
@@ -32,8 +30,8 @@ public class lol implements Command {
 		return "Returns lol";
 	}
 
-	public String getName() {
-		return this.name;
-	}
-
+    public String getName() {
+        String[] nameparts = this.getClass().getName().split("\\.");
+        return nameparts[nameparts.length-1];
+    }
 }
