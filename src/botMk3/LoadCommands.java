@@ -15,6 +15,7 @@ public class LoadCommands {
 		commands.add(new random());
 		commands.add(new lol());
 		commands.add(new link());
+        commands.add(new proxxi());
 
 		/*System.out.println("Commands loaded");
 		for(int i=0; i < commands.size(); i++)

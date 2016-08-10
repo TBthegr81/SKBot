@@ -164,39 +164,42 @@ public class Lib {
 
 		if(input[0].equalsIgnoreCase("quit") || input[0].equalsIgnoreCase("exit"))
 		{
-			System.out.println("Quitting!");
+			//System.out.println("Quitting!");
 			System.exit(1);
 		}
 		else if(input[0].equalsIgnoreCase("reload"))
 		{
-			System.out.println("Reloading Commands");
+			//System.out.println("Reloading Commands");
 			commands = LoadCommands.load();
 		}
 		else if(input[0].equalsIgnoreCase("help"))
 		{
-			System.out.println("Help module for SKBot");
+			//System.out.println("Help module for SKBot");
 			if(input.length > 1)
 			{
-				System.out.println("Help for "+input[1]);
+				//System.out.println("Help for "+input[1]);
 				for(int i = 0; i < commands.size(); i++)
 				{
-					System.out.println("Trying: " + commands.get(i).getName());
+					//System.out.println("Trying: " + commands.get(i).getName());
 					if(commands.get(i).getName().equalsIgnoreCase(input[1]))
 					{
-						System.out.println(commands.get(i).getHelpDescription());
+						//System.out.println(commands.get(i).getHelpDescription());
                         answers.add(commands.get(i).getHelpDescription());
 					}
 				}
 			}
 			else
 			{
-				System.out.println("Commands:");
-                String commandlist = "";
+				//System.out.println("Commands:");
+                String commandlist = "List of Commands enabled: ";
 				for(int i = 0; i < commands.size(); i++)
 				{
-					System.out.println(commands.get(i).getName() + " - " + commands.get(i).getShortDescription());
+					//System.out.println(commands.get(i).getName() + " - " + commands.get(i).getShortDescription());
                     //answers.add(commands.get(i).getName() + " - " + commands.get(i).getShortDescription());
-                    commandlist += commands.get(i).getName() + ", ";
+                    commandlist += commands.get(i).getName();
+                    if(i < commands.size()-1) {
+                        commandlist += ", ";
+                    }
 				}
                 answers.add(commandlist);
 			}
