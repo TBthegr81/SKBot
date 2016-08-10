@@ -191,11 +191,14 @@ public class Lib {
 			else
 			{
 				System.out.println("Commands:");
+                String commandlist = "";
 				for(int i = 0; i < commands.size(); i++)
 				{
 					System.out.println(commands.get(i).getName() + " - " + commands.get(i).getShortDescription());
-                    answers.add(commands.get(i).getName() + " - " + commands.get(i).getShortDescription());
+                    //answers.add(commands.get(i).getName() + " - " + commands.get(i).getShortDescription());
+                    commandlist += commands.get(i).getName() + ", ";
 				}
+                answers.add(commandlist);
 			}
 		}
 		else

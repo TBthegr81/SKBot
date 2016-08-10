@@ -4,7 +4,7 @@ import botMk3.Interfaces.Command;
 
 import java.util.ArrayList;
 
-public class lol implements Command {
+public class proxxi implements Command {
 	private String[] triggers = {""};
 	private String name = "lol";
 
@@ -14,9 +14,9 @@ public class lol implements Command {
 		//If input isnt null, check if it coresponds with the trigger-words
 		if(input.length > 0)
 		{
-			if(input[0].equalsIgnoreCase("lol"))
+			if(input[0].equalsIgnoreCase("proxxi"))
 			{
-				answer.add("lol");
+				answer.add("Proxxi är stängt");
 			}
 		}
 		return answer;
@@ -24,12 +24,12 @@ public class lol implements Command {
 
 	public String getHelpDescription() {
 		
-		return "Returns lol";
+		return "Returns if Proxxi is open.";
 	}
 
 	public String getShortDescription() {
 		
-		return "Returns lol";
+		return "Returns if Proxxi is open.";
 	}
 
 	public String getName() {

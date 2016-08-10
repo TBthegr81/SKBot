@@ -13,7 +13,7 @@ public class LoadCommands {
 		
 
 		commands.add(new random());
-		//commands.add(new lol());
+		commands.add(new lol());
 		commands.add(new link());
 
 		/*System.out.println("Commands loaded");

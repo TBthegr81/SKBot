@@ -14,7 +14,7 @@ public class IRCThread extends Thread
 	public IRCThread(Host irc_host) {
         System.out.println("Setting up IRC Thread");
         host = irc_host;
-        bot = new MyBot("SKBot");
+        bot = new MyBot("SKBot2");
 
         bot.setVerbose(true);
 

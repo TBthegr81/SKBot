@@ -38,7 +38,7 @@ public class link implements Command {
 		if(input[i].toLowerCase().contains("http://") || input[i].toLowerCase().contains("https://"))
 		{
             try {
-                domain = getDomainName(input[i]);
+                domain = getDomainName(input[i]).toLowerCase();
                 System.out.println("Domain: " + domain);
             } catch (URISyntaxException e) {
                 System.err.println("ERROR: " + e.getLocalizedMessage());
@@ -47,69 +47,126 @@ public class link implements Command {
             try {
                 doc = Jsoup.connect(input[i]).get();
 
-                if(domain.equalsIgnoreCase("webhallen.com"))
+                if(domain.contains("webhallen.com"))
                 {
                     title = getTitle(doc);
                     price = doc.select("#product_price");
                     title += " Price: " + price.text() + "kr";
                 }
-                else if(domain.equalsIgnoreCase("amazon.co.uk") || domain.equalsIgnoreCase("amazon.com"))
-                {
+                else if(domain.contains("amazon.co.uk") || domain.contains("amazon.com")) {
                     title = getTitle(doc);
                     price = doc.select("#priceblock_ourprice");
-                    title += " Price: " + price.text();
+                    if(price != null)
+                    {
+                        title += " Price: " + price.text();
+                    }
                 }
-                else if(domain.equalsIgnoreCase("mathem.se"))
-                {
+                else if(domain.contains("mathem.se")) {
                     title = getTitle(doc);
                     price = doc.select("#spnPrice");
-                    title += " Price: " + price.first().text() + "kr";
+                    if(price != null)
+                    {
+                        title += " Price: " + price.first().text() + "kr";
+                    }
                 }
-                else if(domain.equalsIgnoreCase("inet.se"))
-                {
+                else if(domain.contains("inet.se")) {
                     title = getTitle(doc);
                     price = doc.select(".active-price");
-                    title += " Price: " + price.get(1).text();
+                    if(price != null)
+                    {
+                        title += " Price: " + price.get(1).text();
+                    }
                 }
-                else if(domain.equalsIgnoreCase("shop.lego.com"))
-                {
+                else if(domain.contains("shop.lego.com")) {
                     title = getTitle(doc);
                     price = doc.select(".product-price em");
-                    if(price.size() > 0)  title += " Price: " + price.get(0).text();
+                    if(price != null)
+                    {
+                        if(price.size() > 0)  title += " Price: " + price.get(0).text();
+                    }
                 }
-                else if(domain.equalsIgnoreCase("ikea.com"))
-                {
+                else if(domain.contains("ikea.com")) {
                     title = getTitle(doc);
                     price = doc.select("#price1");
-                    title += " Price: " + price.get(0).text();
+                    if(price != null)
+                    {
+                        title += " Price: " + price.get(0).text();
+                    }
                 }
-                else if(domain.equalsIgnoreCase("prisjakt.nu"))
-                {
+                else if(domain.contains("prisjakt.nu")) {
                     title = getTitle(doc);
                     price = doc.select(".pris");
-                    title += " Price from: " + price.get(0).text();
+                    if(price != null)
+                    {
+                        title += " Price from: " + price.get(0).text();
+                    }
                 }
-                else if(domain.equalsIgnoreCase("sfbok.se"))
-                {
+                else if(domain.contains("sfbok.se")) {
                     title = getTitle(doc);
                     price = doc.select(".field-item.even");
-                    title += " Price: " + price.get(0).text();
+                    if(price != null)
+                    {
+                        title += " Price: " + price.get(0).text();
+                    }
                 }
-                else if(domain.equalsIgnoreCase("blocket.se"))
-                {
+                else if(domain.contains("blocket.se")) {
                     title = getTitle(doc);
                     price = doc.select("#vi_price");
-                    title += " Price: " + price.get(0).text();
+                    if(price != null)
+                    {
+                        title += " Price: " + price.get(0).text();
+                    }
+
+                    String area_label = doc.select(".area_label").text();
+                    if(area_label != null)
+                    {
+                        title += " Area: " + area_label;
+                    }
+
+                    String published = doc.select("#seller-info time").text();
+                    if(published != null)
+                    {
+                        title += " Pub: " + published;
+                    }
                 }
-                else if(domain.equalsIgnoreCase("kjell.com"))
-                {
+                else if(domain.contains("kjell.com")) {
                     title = getTitle(doc);
                     price = doc.select(".bestPrice");
-                    title += " Price: " + price.get(0).text();
+                    if(price != null)
+                    {
+                        title += " Price: " + price.get(0).text();
+                    }
                 }
-                else if(domain.equalsIgnoreCase("vimeo.com"))
+                else if(domain.contains("vimeo.com")) {
+                    title = "Nobody uses vimeo... Don't kid yourself";
+                }
+                else if(domain.contains("spotify.com")) {
+                    title = doc.select(".primary-title") + " - " + doc.select(".secondary-title");
+                }
+                else if(domain.contains("youtube.com"))
                 {
-                    title = "Nobody use vimeo";
+                    String videoname = doc.select("[property=\"og:title\"]").attr("content");
+                    if(videoname.length() > 50)
+                    {
+                        videoname = videoname.substring(0,49);
+                    }
+
+                    String description = doc.select("[property=\"og:description\"]").attr("content");
+                    if(description.length() > 70)
+                    {
+                        description = description.substring(0,69);
+                    }
+
+                    String channel = doc.select(".yt-user-info a").text();
+
+                    title = "Title: " + videoname + " Desc: " + description;
+                }
+                else if(domain.contains("imgur.com")) {
+                    title = doc.select("title").text();
+                    if(title.equalsIgnoreCase("Imgur"))
+                    {
+                        title = "";
+                    }
                 }
                 else
                 {
@@ -121,7 +178,7 @@ public class link implements Command {
                  System.err.println("ERROR: " + e.getLocalizedMessage());
             }
 
-            Sqlite.insertLink(input[i], domain);
+            //Sqlite.insertLink(input[i], domain);
 		}
 	}
 	 return answer;
